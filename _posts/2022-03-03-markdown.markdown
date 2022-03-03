@@ -1,0 +1,33 @@
+---
+layout: single
+title: Markdown 정리
+date: 2022-03-03 13:26:15 +0900
+last_modified_at: 2022-03-03 13:26:15 +0900
+category: blog
+tags: ["tag1", "tag2"]
+# categories: ["category1", "category2"]
+---
+> Hello!
+
+Markdown 정리
+
+# 1단계
+## 2단계
+### 3단계
+#### 4단계
+##### 5단계
+###### 6단계
+
+__Bold__
+
+_Italic_
+
+`print('hello world! inline Code')`
+
+
+```python
+print('hello world! code block')
+```
+
+
+[링크]("www.google.com")

@@ -1,0 +1,228 @@
+---
+layout: single
+title: IAM
+date: 2022-03-06 21:52:00 +0900
+last_modified_at: 2022-03-06 21:52:00 +0900
+category: SAA-C02
+tags: ["SAA-C02", "IAM"]
+published: false
+---
+> Identity and Access Management
+
+## 1. IAM
+### 1.1. User & Groups
+* IAM = Identity and Access Management, Global service
+* IAM = ID 및 액세스 관리, 글로벌 서비스
+
+* __Root account__ created by default, shouldn’t be used or shared
+* 기본적으로 생성된 __루트 계정__은 사용되거나 공유되지 않아야 합니다.
+
+* __Users__ are people within your organization, and can be grouped
+* __사용자__는 조직 내의 사람들이며 그룹화할 수 있습니다.
+
+* __Groups__ only contain users, not other groups
+* __그룹__은 다른 그룹이 아닌 사용자만 포함합니다.
+
+* Users don’t have to belong to a group, and user can belong to multiple groups
+* 사용자는 그룹에 속할 필요가 없으며 여러 그룹에 속할 수 있습니다.
+
+
+### 1.2. Permissions
+* __Users or Groups__ can be assigned JSON documents called policies
+* __사용자 또는 그룹__에 정책이라는 JSON 문서를 할당할 수 있습니다.
+
+* These policies define the __permissions__ of the users
+* 이러한 정책은 사용자의 __권한__을 정의합니다.
+
+* In AWS you apply the __least privilege principle__: don’t give more permissions than a user needs
+* AWS에서는 __최소 권한 원칙__을 적용합니다. 사용자가 필요로 하는 것보다 많은 권한을 부여하지 마십시오.
+
+
+## 2. IAM Policies
+### 2.1 IAM Policies inheritance (상속)
+* 그룹내의 사용자는 그룹의 정책을 상속 받음.
+
+
+## 3. IAM MFA
+### 3.1 Password Policy
+* Strong passwords = higher security for your account
+* 강력한 암호 = 계정에 대한 높은 보안성
+
+* In AWS, you can setup a password policy:
+* AWS에서 암호 정책을 설정할 수 있습니다:
+    * Set a minimum password length
+    * 최소 암호 길이 설정
+
+    * Require specific character types:
+    * 특정 문자 유형 필요:
+
+        * including uppercase letters
+        * 대문자 포함
+
+        * lowercase letters
+        * 소문자
+
+        * numbers
+        * 숫자
+
+        * non-alphanumeric characters
+        * 비유사적 문자
+
+    * Allow all IAM users to change their own passwords
+    * 모든 IAM 사용자가 자신의 암호를 변경할 수 있도록 허용
+
+    * Require users to change their password after some time (password expiration)
+    * 일정 시간 후 사용자에게 비밀번호 변경 요구(비밀번호 만료)
+
+    * Prevent password re-use
+    * 암호 재사용 방지
+
+### 3.2 (중요!) Multi Factor Authentication - MFA
+AWS에서 필수조항이고 사용하도록 강력 권고됨.
+MFA 디바이스를 사용하여 Root 계정을 보호. (Physical Device)
+
+* Users have access to your account and can possibly change configurations or delete resources in your AWS account
+* 사용자는 계정에 액세스할 수 있으며 AWS 계정의 구성을 변경하거나 리소스를 삭제할 수 있습니다.
+
+* __You want to protect your Root Accounts and IAM users__
+* __루트 계정 및 IAM 사용자를 보호하려는 경우__
+
+* MFA = password you know + __security device you own__
+* 알고 있는 MFA = 암호 + __소유하고 있는 보안 장치__
+
+* __Main benefit of MFA__: if a password is stolen or hacked, the account is not compromised
+* __MFA의 주요 이점__: 암호를 도난당하거나 해킹당해도 계정은 손상되지 않습니다.
+
+* Password + MFA (MFA 생성 토큰) => Successful login
+
+### 3.3 (중요!) MFA devices options in AWS
+* Virtual MFA device: Support for multiple tokens on a single device.
+    * Google Authenticator (phone only) - 한 번에 하나의 폰에서만 작동
+    * Authy (multi-device) - 컴퓨터와 폰에서 함께 사용 가능
+
+* Universal 2nd Factor (U2F) Security Key: Support for multiple root and IAM users using a single security key
+    * YubiKey by Yubico (3rd party) - Physical Device(USB)
+
+* Hardware Key Fob MFA Device
+    * Provided by Gemalto (3rd party)
+
+* Hardware Key Fob MFA Device for AWS GovCloud (US)
+    * Provided by SurePassID (3rd party)
+
+
+## 4. IAM Access key
+### 4.1 Access AWS
+* To access AWS, you have three options:
+* AWS에 액세스하려면 다음 세 가지 옵션을 사용할 수 있습니다:
+    * __AWS Management Console__ (protected by password + MFA)
+    * __AWS Command Line Interface (CLI)__: protected by access keys
+    * __AWS Software Developer Kit (SDK)__ - for code: protected by access keys
+* Access Keys are generated through the AWS Console
+* 액세스 키는 AWS 콘솔을 통해 생성됩니다.
+
+* Users manage their own access keys
+* 사용자가 자신의 액세스 키 관리
+
+* __Access Keys are secret, just like a password. Don’t share them__
+* __액세스 키는 비밀번호와 마찬가지로 비밀입니다. 공유하지마세요.__
+
+* Access Key ID ~= username
+* Secret Access Key ~= password
+
+### 4.2 AWS CLI
+* A tool that enables you to interact with AWS services using commands in your command-line shell
+* command-line shell의 명령을 사용하여 AWS 서비스와 상호 작용할 수 있는 도구
+
+* Direct access to the public APIs of AWS services
+* AWS 서비스의 공용 API에 직접 액세스
+
+* You can develop scripts to manage your resources
+* 스크립트를 개발하여 리소스를 관리할 수 있습니다.
+
+* It’s open-source https://github.com/aws/aws-cli
+
+* Alternative to using AWS Management Console
+* AWS Management Console을 사용하는 방법
+
+### 4.3 AWS SDK
+* AWS Software Development Kit (AWS SDK)
+* AWS 소프트웨어 개발 키트(AWS SDK)
+
+* Language-specific APIs (set of libraries)
+* 언어 - 특정 API(라이브러리 집합)
+
+* Enables you to access and manage AWS services programmatically
+* 프로그래밍 방식으로 AWS 서비스에 액세스하고 관리할 수 있습니다.
+
+* Embedded within your application
+* 어플리케이션에 포함됨
+
+* Supports
+    * SDKs (JavaScript, Python, PHP, .NET, Ruby, Java, Go, Node.js, C++)
+    * Mobile SDKs (Android, iOS, ...)
+    * IoT Device SDKs (Embedded C, Arduino, ...)
+
+* Example: AWS CLI is built on AWS SDK for Python
+* 예: AWS CLI는 Python용 AWS SDK를 기반으로 합니다.
+
+
+## 5. IAM Roles for Services
+* Some AWS service will need to perform actions on your behalf
+* 일부 AWS 서비스는 사용자 대신 작업을 수행해야 합니다.
+
+* To do so, we will assign __permissions__ to AWS services with __IAM Roles__
+* 이를 위해, __IAM Roles__이 있는 AWS 서비스에 __permissions_를 할당하겠습니다.
+
+* Common roles: 공통 역할:
+    * EC2 Instance Roles
+    * Lambda Function Roles
+    * Roles for CloudFormation
+
+
+## 6. IAM Security Tools
+* IAM Credentials Report (account-level)
+* IAM 자격 증명 보고서(계정 수준)
+
+* a  report that lists all your account's users and the status of their various credentials
+* 계정의 모든 사용자와 다양한 인증 정보의 상태를 나열하는 보고서
+
+* IAM Access Advisor (user-level)
+* IAM Access Advisor(사용자 레벨)
+    * Access advisor shows the service permissions granted to a user and when those services were last accessed.
+    * 액세스 관리자에는 사용자에게 부여된 서비스 권한과 해당 서비스에 마지막으로 액세스한 시간이 표시됩니다.
+    
+    * You can use this information to revise your policies.
+    * 이 정보를 사용하여 정책을 수정할 수 있습니다.
+
+
+## 7. IAM Guidelines & Best Practices
+* Don’t use the root account except for AWS account setup
+* AWS 계정 설정을 제외하고 루트 계정을 사용하지 않습니다.
+
+* One physical user = One AWS __user__
+* 물리적 사용자 1명 = AWS __user__ 1명
+
+* __Assign users to groups__ and assign permissions to groups
+* __그룹__에 사용자 할당 및 그룹에 권한 할당
+
+* Create a __strong password policy__
+* __강력한 암호 정책__ 생성
+
+* Use and enforce the use of __Multi Factor Authentication (MFA)__
+* __MFA(Multiple Factor Authentication)__ 의 사용 및 적용
+
+* Create and use __Roles__ for giving permissions to AWS services
+* AWS 서비스에 사용 권한을 부여하는 데 __Roles__ 를 생성하고 사용합니다.
+
+* Use Access Keys for Programmatic Access (CLI / SDK)
+* 프로그래밍 방식 액세스를 위한 액세스 키 사용(CLI/SDK)
+
+* Audit permissions of your account with the IAM Credentials Report
+* IAM 자격 증명 보고서를 사용하여 계정의 권한 감사
+
+* __Never share IAM users & Access Keys__
+* __IAM 사용자 & 액세스 키 공유 금지__
+
+### Reference
+Stephane Maarek,【글로벌 Best】 AWS Certified Solutions Architect Associate 시험합격!, Udemy
+ (https://www.udemy.com/course/best-aws-certified-solutions-architect-associate/)

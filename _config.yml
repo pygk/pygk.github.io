@@ -289,3 +289,4 @@ defaults:
       comments: # true
       share: true
       related: true
+      image: true # 220413

@@ -1,0 +1,51 @@
+---
+layout: single
+title: MLflow 실습 4
+date: 2022-04-19 14:41:00 +0900
+last_modified_at: 2022-04-19 14:41:00 +0900
+category: mlops
+tags: ["Model Management"]
+published: false
+---
+
+# 1. Example code 살펴보기 (Automatic Logging)
+
+- [https://github.com/mlflow/mlflow/tree/master/examples/sklearn_autolog](https://github.com/mlflow/mlflow/tree/master/examples/sklearn_autolog)
+
+```bash
+wget https://raw.githubusercontent.com/mlflow/mlflow/master/examples/sklearn_autolog/utils.py
+wget https://raw.githubusercontent.com/mlflow/mlflow/master/examples/sklearn_autolog/pipeline.py
+```
+
+- mlflow 에서 example 로 제공해주는 example 중 하나
+    - 간단한 training data 를 가지고 **sklearn** 의 **Pipeline** 을 사용해, StandardScaler 전처리 이후 **LinearRegression** 을 수행하는 코드
+- scikit-learn 과 같은 패키지는 mlflow 레벨에서 `autolog` 를 [지원](https://www.mlflow.org/docs/latest/tracking.html#automatic-logging)
+    - model 의 parameters, metrics 와 model artifacts 를 사용자가 명시하지 않아도 **자동으로** mlflow 에 로깅
+    - 예시
+        
+        <!-- ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/96dd2084-0735-405a-8e77-6c999ce7b783/Untitled.png) -->
+        ![Untitled](/assets/img/mlops_mlflow_4_1.png)
+        
+        <!-- ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/d64cde79-b495-4517-9a19-2be2932dc8d3/Untitled.png) -->
+        ![Untitled](/assets/img/mlops_mlflow_4_2.png)
+        
+
+---
+
+# 2. Example code 살펴보기 (XGB Model)
+
+- [https://github.com/mlflow/mlflow/tree/master/examples/xgboost](https://github.com/mlflow/mlflow/tree/master/examples/xgboost)
+
+```bash
+wget https://raw.githubusercontent.com/mlflow/mlflow/master/examples/xgboost/train.py
+
+# xgboost==1.4.2 설치 필요
+```
+
+- mlflow 에서 example 로 제공해주는 example 중 하나
+    - **iris** data 를 가지고 **xgboost** 모델로 **classification** 을 수행하는 코드
+- mlflow 에서 지원하는 xgboost 용 autolog 를 사용했고, 추가적인 custom metric 을 남기기 위해 `mlflow.log_metrics()` 사용
+    - 예시
+        
+        <!-- ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/33e9a603-9f10-478e-8305-ed50f78e749b/Untitled.png) -->
+        ![Untitled](/assets/img/mlops_mlflow_4_3.png)

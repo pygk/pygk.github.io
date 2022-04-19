@@ -1,16 +1,12 @@
 ---
 layout: single
-title: mlops
-date: 2022-04-13 16:25:00 +0900
-last_modified_at: 2022-03-06 13:28:00 +0900
+title: 실습 1. Feast 기본 예제 - (1) Store 생성과 배포
+date: 2022-04-19 16:47:00 +0900
+last_modified_at: 2022-04-19 16:47:00 +0900
 category: mlops
-tags: ["tag1", "tag2"]
+tags: ["Feast Feature Store 구축 실습"]
 published: false
 ---
-> ubuntu 18.14 vscode install
-
-# **실습 1. Feast 기본 예제 - (1) Store 생성과 배포**
-
 <aside>
 💡 **실습 목표
 1. Feast Feature Store 를 생성하여 각 Feature 들을 정의하여 Store 에 배포하기**
@@ -70,11 +66,13 @@ published: false
         - data : Feast 에서 제공하는 데모 데이터 (parquet 형식)
         - example.py : 데모 데이터의 Feature 정의
             
-            ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/07df8b8c-01ec-43da-bb20-3e75eb6111da/Untitled.png)
+            <!-- ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/07df8b8c-01ec-43da-bb20-3e75eb6111da/Untitled.png) -->
+            ![Untitled](/assets/img/mlops_feast_1_1.png)
             
             - [Data Source](https://rtd.feast.dev/en/master/#module-feast.data_source)
                 
-                ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bf3ec51a-90f7-42ff-93b7-faf695dd8ce9/Untitled.png)
+                <!-- ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/bf3ec51a-90f7-42ff-93b7-faf695dd8ce9/Untitled.png) -->
+                ![Untitled](/assets/img/mlops_feast_1_2.png)
                 
             - [Feature](https://rtd.feast.dev/en/master/#module-feast.feature)
                 - name, dtype, labels 정의
@@ -82,7 +80,8 @@ published: false
                 - 관련된 Feature 들의 모음으로 primary key 역할
                 - Entity key
                     
-                    ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ae3afd03-bd8c-412b-89ff-19d295054342/Untitled.png)
+                    <!-- ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/ae3afd03-bd8c-412b-89ff-19d295054342/Untitled.png) -->
+                    ![Untitled](/assets/img/mlops_feast_1_3.png)
                     
             - Feature View 내 [다른 데이터 원천](https://docs.feast.dev/reference/data-sources) 사용
                 - BigQuery 예시
@@ -183,11 +182,13 @@ published: false
                             - Online Store 와 데이터 원천 간의 가장 큰 차이점은 entity key 마다의 최신 Feature 값만 저장됨. 누적값들이 저장되지 않음
                             - 데이터 원천 예
                             
-                            ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/227edf57-fb93-46f4-b9cd-b6238ea3bd6d/Untitled.png)
+                            <!-- ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/227edf57-fb93-46f4-b9cd-b6238ea3bd6d/Untitled.png) -->
+                            ![Untitled](/assets/img/mlops_feast_1_4.png)
                             
                             - Online Store 모습
                             
-                            ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f10cbbe2-0f10-4226-9852-60350830e800/Untitled.png)
+                            <!-- ![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/f10cbbe2-0f10-4226-9852-60350830e800/Untitled.png) -->
+                            ![Untitled](/assets/img/mlops_feast_1_5.png)
                             
                         - Offline Store
                             - 누적되는 Feature 들로부터 훈련 데이터를 생성할 때 사용
@@ -234,3 +235,9 @@ published: false
         ```
         
     - 정의된 Feature 들을 적용(배포)하기
+        - 적용 전에 feature_repo 에 있는 notebook 관련 파일 삭제 필요
+        
+        ```python
+        !rm -rf .ipynb_checkpoints/
+        !feast apply
+        ```

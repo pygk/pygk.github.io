@@ -4,7 +4,7 @@ title: 쿠버네티스 실습 3 - POD
 date: 2022-04-13 17:53:00 +0900
 last_modified_at: 2022-04-13 17:53:00 +0900
 category: mlops
-tags: ["tag1", "tag2"]
+tags: ["docker", "k8s"]
 published: false
 ---
 

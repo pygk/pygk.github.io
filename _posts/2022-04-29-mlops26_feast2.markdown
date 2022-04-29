@@ -1,0 +1,111 @@
+---
+layout: single
+title: 실습 2. Feast 기본 예제 - (2) Feature 추출 및 추론
+date: 2022-04-29 10:23:00 +0900
+last_modified_at: 2022-04-29 10:23:00 +0900
+category: mlops
+tags: ["Feast Feature Store 구축 실습"]
+published: false
+
+---
+
+<aside>
+💡 **실습 목표
+1. Store 로부터 훈련 데이터 추출하기
+2. Online Store 로 데이터를 적재하고 추론을 위한 Feature Vector 가져오기**
+
+</aside>
+
+### **Store 로부터 훈련 데이터 추출하기**
+
+- 훈련 데이터 추출
+    - get_historical_features 로 데이터 추출
+        
+        ```python
+        from datetime import datetime, timedelta
+        import pandas as pd
+        
+        from feast import FeatureStore
+        
+        # The entity dataframe is the dataframe we want to enrich with feature values
+        entity_df = pd.DataFrame.from_dict(
+            {
+                "driver_id": [1001, 1002, 1003],
+                "label_driver_reported_satisfaction": [1, 5, 3], 
+                "event_timestamp": [
+                    datetime.now() - timedelta(minutes=11),
+                    datetime.now() - timedelta(minutes=36),
+                    datetime.now() - timedelta(minutes=73),
+                ],
+            }
+        )
+        
+        store = FeatureStore(repo_path=".")
+        
+        training_df = store.get_historical_features(
+            entity_df=entity_df,
+            features=[
+                "driver_hourly_stats:conv_rate",
+                "driver_hourly_stats:acc_rate",
+                "driver_hourly_stats:avg_daily_trips",
+            ],
+        ).to_df()
+        
+        print("----- Feature schema -----\n")
+        print(training_df.info())
+        
+        print()
+        print("----- Example features -----\n")
+        print(training_df.head())
+        ```
+        
+
+### **Online Store 로 데이터를 적재하고 추론을 위한 Feature Vector 가져오기**
+
+- Online Store 로 데이터 적재
+    - Serving 을 하기 위해 materialize-incremental 명령어를 사용하여 가장 최근 실행된 materialize 이후의 모든 새로운 feature 값들을 serialization 시켜 준다.
+        
+        ```python
+        from datetime import datetime
+        !feast materialize-incremental {datetime.now().isoformat()}
+        ```
+        
+    - materialized features 확인
+        
+        ```python
+        print("--- Data directory ---")
+        !ls data
+        
+        import sqlite3
+        import pandas as pd
+        con = sqlite3.connect("data/online_store.db")
+        print("\n--- Schema of online store ---")
+        print(
+            pd.read_sql_query(
+                "SELECT * FROM feature_repo_driver_hourly_stats", con).columns.tolist())
+        con.close()
+        ```
+        
+- 추론을 위한 Feature Vector 가져오기
+    - get_online_features 로 데이터 추출
+        
+        ```python
+        from pprint import pprint
+        from feast import FeatureStore
+        
+        store = FeatureStore(repo_path=".")
+        
+        feature_vector = store.get_online_features(
+            features=[
+                "driver_hourly_stats:conv_rate",
+                "driver_hourly_stats:acc_rate",
+                "driver_hourly_stats:avg_daily_trips",
+            ],
+            entity_rows=[
+                {"driver_id": 1004},
+                {"driver_id": 1005},
+            ],
+        ).to_dict()
+        
+        pprint(feature_vector)
+        ```

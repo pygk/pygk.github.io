@@ -1,5 +1,5 @@
 ---
-layout: single
+layout: custom
 title: ubuntu 20.04에 Docker 설치하기
 date: 2022-05-10 15:22:00 +0900
 last_modified_at: 2022-05-10 15:22:00 +0900
@@ -85,7 +85,7 @@ $ docker run hello-world
 ```
 
 ### 2) 부팅 시 시작
-- 부팅 시 Docker 및 Container를 자동으로 시작
+- 부팅 시 Docker 및 Containerd를 자동으로 시작
 ```bash
 $ sudo systemctl enable docker.service
 $ sudo systemctl enable containerd.service

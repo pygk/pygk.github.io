@@ -1,6 +1,6 @@
 ---
 layout: custom
-title: ubuntu 20.04에 nvidia-docker2 설치하기
+title: ubuntu 18.04에 nvidia-docker2 설치하기
 date: 2022-05-11 17:15:00 +0900
 last_modified_at: 2022-05-11 17:15:00 +0900
 category: docker
@@ -8,7 +8,7 @@ tags: ["ubuntu", "docker", "nvidia-docker2"]
 published: true
 
 ---
-> ubuntu 20.04에 nvidia-docker2 설치
+> ubuntu 18.04에 nvidia-docker2 설치
 
 ## 1. nvidia-docker2 설치
 - 공식 문서 Installation Guide 참고

@@ -1,6 +1,6 @@
 ---
 layout: custom
-title: ubuntu 20.04에 Docker 설치하기
+title: ubuntu 18.04에 Docker 설치하기
 date: 2022-05-10 15:22:00 +0900
 last_modified_at: 2022-05-10 15:22:00 +0900
 category: docker
@@ -8,7 +8,7 @@ tags: ["ubuntu", "docker"]
 published: true
 
 ---
-> ubuntu 20.04에 Docker 설치 & 설치 이후 설정
+> ubuntu 18.04에 Docker 설치 & 설치 이후 설정
 
 ## 1. Docker 설치
 - 공식 문서 Install using the repository 참고

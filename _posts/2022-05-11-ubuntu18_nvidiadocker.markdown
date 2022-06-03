@@ -17,7 +17,7 @@ published: true
 - Docker 설정
 ```bash
 $ curl https://get.docker.com | sh \
-  && sudo systemctl --now enable docke
+  && sudo systemctl --now enable docker
 ```
     
 - `apt` 패키지 업데이트 & 설치

@@ -1,0 +1,113 @@
+---
+layout: custom
+title: Ubuntu 18.04 WOL 설정
+date: 2022-07-11 09:08:00 +0900
+last_modified_at: 2022-07-11 09:08:00 +0900
+category: ubuntu
+tags: ["ubuntu"]
+published: true
+
+---
+> Ubuntu 18.04 WOL(Wake On Lan) 설정
+
+## 1. 조건
+- WOL을 지원하는 공유기
+- 메인보드가 WOL을 지원하는지 확인
+- BIOS에서 Wake On Lan 등의 항목을 Enable
+- 노트북은 WOL을 지원하지 않는 경우가 있음 (절전모드에서는 WOL 가능)
+
+## 2. Ubuntu WOL 설정
+- 관련 패키지 설치
+```bash
+$ sudo apt-get install net-tools ethtool wakeonlan
+```
+
+- 네트워크 인터페이스 확인
+```bash
+$ ifconfig
+```
+
+- WOL 켜기
+```bash
+$ ifconfig
+```
+
+- WOL 작동 상태 확인
+```bash
+$ sudo ethtool -s {인터페이스명} wol g
+```
+
+- network interface 설정 파일 수정
+```bash
+$ sudo vi /etc/network/interfaces
+```
+    - 아래 내용 추가
+    ```
+    post-up /sbin/ethtool -s 인터페이스명 wol g
+    post-down /sbin/ethtool -s 인터페이스명 wol g
+    ```
+
+- netplan 설정
+```bash
+$ sudo vi /etc/netplan/...yaml
+```
+    - 해당 네트워크 인터페이스에 wakeonlan: true 추가
+    ```
+    wakeonlan: true
+    ```
+
+- netplan 적용
+```bash
+$ sudo netplan apply
+```
+
+## 3. iptime 공유기 설정
+- iptime WOL 설정
+    - MAC 주소 확인
+    ```bash
+    $ ifconfig
+    ```
+
+    - ether
+
+## 4. 추가 설정 (노트북)
+- TLP 설치(Optimize Linux Laptop Battery Life)
+- 윈도우와 달리 Ubuntu는 전력 소모가 심함 
+
+    - 패키지 소스에 추가
+    ```bash
+    $ sudo add-apt-repository ppa:linrunner/tlp
+    $ sudo apt update
+    ```
+
+    - 패키지 설치
+    ```bash
+    $ sudo apt install tlp
+    ```
+
+    - 실행
+    ```bash
+    $ sudo tlp start
+    ```
+
+    - 상태 확인
+    ```bash
+    $ sudo tlp-stat -b
+    ```
+
+- pm-utils 설치
+- (WOL을 지원하지 않는 노트북의 경우) 절전모드 상태에서는 WOL 을 사용 가능.
+    - 패키지 설치
+    ```bash
+    $ sudo apt-get install pm-utils
+    ```
+
+    - 절전모드 (WOL O)
+    ```bash
+    $ sudo pm-suspend
+    ```
+
+    - 최대절전모드 (WOL X)
+    ```bash
+    sudo pm-hibernate
+    ```

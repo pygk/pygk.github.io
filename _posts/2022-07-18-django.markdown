@@ -1,0 +1,173 @@
+---
+layout: custom
+title: django tutorial & sqlite 버전 문제
+date: 2022-07-18 09:08:00 +0900
+last_modified_at: 2022-07-18 09:08:00 +0900
+category: django
+tags: ["django"]
+published: true
+
+---
+> django tutorial & sqlite 버전 문제
+
+## 1. docker 컨테이너 실행 (centos7)
+- docker run
+```bash
+$ docker run --privileged --restart=unless-stopped --name {컨테이너명} -v {host 디렉토리}:{container 디렉토리} -d -p {host 포트}:{container 포트} -it centos:7 /sbin/init
+```
+
+## 2. 패키지 설치
+- sudo & python 설치
+```bash
+$ yum -y install sudo python3
+```
+
+- python & pip 버전 변경
+```bash
+$ update-alternatives --install /bin/python python /bin/python3.6 1
+$ ln -s /bin/pip3.6  /bin/pip
+```
+    - `/usr/bin/yum`파일의 첫 줄 `#!/usr/bin/python` -> `#!/usr/bin/python2.7` 변경
+```
+[root@localhost /]# vi /usr/bin/yum
+#!/usr/bin/python2.7
+import sys
+...
+```
+    - `/usr/libexec/urlgrabber-ext-down`파일의 첫 줄 `#!/usr/bin/python` -> `#!/usr/bin/python2.7` 변경
+```
+[root@localhost /]# vi /usr/libexec/urlgrabber-ext-down
+#! /usr/bin/python2.7
+#  A very simple external downloader
+#  Copyright 2011-2012 Zdenek Pavlas
+...
+```
+
+- nginx
+    - yum  저장소에는 nginx가 없기 때문에 외부 저장소를 추가하여 설치
+    - `/etc/yum.repos.d/` 경로에 `nginx.repo` 파일 생성 및 아래 내용 추가 
+```
+[root@localhost /]# vi /etc/yum.repos.d/nginx.repo
+[nginx]
+name=nginx repo
+baseurl=http://nginx.org/packages/centos/7/$basearch/
+gpgcheck=0
+enabled=1
+```
+    - 패키지 설치
+```bash
+yum -y install nginx
+```
+
+## 3. 계정 생성 및 sudo 권한 설정
+- 계정 생성
+```bash
+$ useradd {계정명}
+```
+
+- 패스워드 변경
+```bash
+$ passwd {계정명}
+```
+
+- sudo 권한 설정
+```
+[root@localhost /]# visudo -f /etc/sudoers
+...
+## Allow root to run any commands anywhere
+root    ALL=(ALL)       ALL
+{계정명}    ALL=(ALL)       ALL
+
+## Allows members of the 'sys' group to run networking, software,
+...
+```
+
+- 계정 변경
+```bash
+$ su {계정명}
+```
+
+## 4. Django 설치 및 튜토리얼
+- venv
+```bash
+$ python -m venv {가상환경명}
+```
+
+- activate
+```bash
+$ source {가상환경명}/bin/activate
+```
+
+- django 및 기타 라이브러리 설치
+```bash
+$ pip install --upgrade pip
+$ pip install Django
+$ pip install djangorestframework
+$ pip install gunicorn
+```
+
+- django 프로젝트 만들기
+```bash
+$ django-admin startproject {프로젝트명}
+```
+
+- 서버 실행
+```bash
+$ python manage.py runserver
+```
+
+- 에러...
+```
+...
+    'SQLite 3.9.0 or later is required (found %s).' % Database.sqlite_version
+django.core.exceptions.ImproperlyConfigured: SQLite 3.9.0 or later is required (found 3.7.17).
+```
+- 에러 해결 (sqlite3 최신 버전 설치)
+    - wget 패키지 설치
+```bash
+$ sudo yum install -y wget ca-certificates gcc
+```
+
+    - sqlite3 최신 버전 설치
+        - [https://sqlite.org/download.html](https://sqlite.org/download.html) 에서 원하는 버전 다운로드 (우클릭 -> 링크 주소 복사)
+        - ![Untitled](/assets/img/django_1.png)
+```bash
+# Download
+$ sudo wget https://sqlite.org/2022/sqlite-autoconf-3390100.tar.gz
+$ sudo tar -zxf sqlite-autoconf-3390100.tar.gz
+cd sqlite-autoconf-3390100
+
+# compile & install
+$ sudo ./configure
+$ sudo make clean && sudo make -j 20 && sudo make install
+
+#  check
+& sqlite3 --version
+```
+    - 기본으로 바라보는 library 경로의 파일을 새로 설치한 파일로 교체
+    - find /usr/ -name libsqlite3.so.0.8.6 으로 확인
+    - /usr/ 또는 /lib/, /lib64/ 의 경로에서 libsqlite3.so.0.8.6 파일을 찾아 바꾸기
+```
+$ sudo vi /etc/ld.so.conf
+/etc/ld.so.conf
+```
+
+```bash
+$ sudo /sbin/ldconfig
+```
+
+- sqlite 3 반영
+```
+$ vi ~/.bashrc
+...
+export LD_LIBRARY_PATH=/usr/local/lib
+```
+
+```bash
+$ source ~/.bashrc
+```
+
+- 서버 실행 테스트
+```bash
+$ python manage.py runserver
+```

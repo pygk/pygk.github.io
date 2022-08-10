@@ -1,0 +1,46 @@
+---
+layout: custom
+title: Ubuntu 18.04 k8s
+date: 2022-07-11 09:08:00 +0900
+last_modified_at: 2022-07-11 09:08:00 +0900
+category: ubuntu
+tags: ["ubuntu"]
+published: true
+
+---
+> Ubuntu 18.04 WOL(Wake On Lan) 설정
+
+- References
+    - kubeadm 설치
+        - [https://kubernetes.io/ko/docs/setup/production-environment/tools/kubeadm/install-kubeadm/](https://kubernetes.io/ko/docs/setup/production-environment/tools/kubeadm/install-kubeadm/)
+    - [https://medium.com/finda-tech/overview-8d169b2a54ff](https://medium.com/finda-tech/overview-8d169b2a54ff)
+
+## 1. 조건
+- 2 GB 이상의 램을 장착한 머신. (이 보다 작으면 사용자의 앱을 위한 공간이 거의 남지 않음)
+- 2 이상의 CPU.
+- 클러스터의 모든 머신에 걸친 전체 네트워크 연결. (공용 또는 사설 네트워크면 괜찮음)
+- 모든 노드에 대해 고유한 호스트 이름, MAC 주소 및 product_uuid.
+    - mac 주소 확인: `ip link` or `ifconfig -a`
+    - product_uuid 확인: `sudo cat /sys/class/dmi/id/product_uuid`
+- 컴퓨터의 특정 포트들 개방.
+    - 포트 개방 확인: `nc 127.0.0.1 6443`
+    - Control plane
+  
+        |Protocol|Direction|Port Range|Purpose|Used By|
+        |---|---|---|---|---|
+        |TCP|Inbound|6443|Kubernetes API server|All|
+        |TCP|Inbound|2379-2380|etcd server client API|kube-apiserver, etcd|
+        |TCP|Inbound|10250|Kubelet API|Self, Control plane|
+        |TCP|Inbound|10259|kube-scheduler|Self|
+        |TCP|Inbound|10257|kube-controller-manager|Self|
+  
+    - Worker nodes
+  
+        |Protocol|Direction|Port Range|Purpose|Used By|
+        |---|---|---|---|---|
+        |TCP|Inbound|10250|Kubelet API|Self, Control plane|
+        |TCP|Inbound|30000-32767|NodePort Services|All|
+  
+- 스왑의 비활성화. kubelet이 제대로 작동하게 하려면 반드시 스왑을 사용하지 않도록 설정한다.
+    - `swapoff -a`
+    - `sudo vi /etc/fstab`

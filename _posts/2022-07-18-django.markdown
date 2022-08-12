@@ -147,6 +147,9 @@ $ sudo make clean && sudo make -j 20 && sudo make install
     - 기본으로 바라보는 library 경로의 파일을 새로 설치한 파일로 교체
     - find /usr/ -name libsqlite3.so.0.8.6 으로 확인
     - /usr/ 또는 /lib/, /lib64/ 의 경로에서 libsqlite3.so.0.8.6 파일을 찾아 바꾸기
+
+    - sudo /bin/cp -rf /usr/lib64/libsqlite3.so.0.8.6 /usr/lib64/libsqlite3.so.0.8.6_bak
+    - sudo /bin/cp -rf /usr/local/lib/libsqlite3.so.0.8.6 /usr/lib64/libsqlite3.so.0.8.6
 ```
 $ sudo vi /etc/ld.so.conf
 /etc/ld.so.conf

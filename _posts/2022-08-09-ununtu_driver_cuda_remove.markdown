@@ -89,7 +89,7 @@ Logfile is /var/log/cuda-installer.log
 
 - CUDA bin 경로 `/etc/profile`에 추가 및 CUDA lib 경로 `/etc/ld.so.conf`에 추가
 ```
-# /etc/prifile
+# /etc/profile
 export PATH=$PATH:/usr/local/cuda/bin
 export CUDADIR=/usr/local/cuda
 

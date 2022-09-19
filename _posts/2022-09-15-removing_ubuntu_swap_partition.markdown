@@ -50,6 +50,4 @@ Changes take effect immediately; you must type the correct minor number.
 Type quit to exit parted.
 
 
-  ```bash
-  $ swapoff -a
-  ```
+  - fdisk 명령으로 swap 파티션의 type을 변경

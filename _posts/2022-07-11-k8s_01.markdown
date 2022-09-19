@@ -44,3 +44,270 @@ published: true
 - 스왑의 비활성화. kubelet이 제대로 작동하게 하려면 반드시 스왑을 사용하지 않도록 설정한다.
     - `swapoff -a`
     - `sudo vi /etc/fstab`
+
+## ?. cluster 구축
+- Master node
+    - init
+    ```bash
+    $ sudo kubeadm init --pod-network-cidr=192.168.0.0/16 --apiserver-advertise-address={master node ip}
+    ```
+        - Network Plugin에 따른 --pod-network-cidr 설정
+            - Calico 기반 `192.168.0.0/16`
+            - Flannel 기반 `10.244.0.0/16`
+            - Cilium 기반 `192.167.0.0/16`
+    
+    - init 결과
+    ```
+    Your Kubernetes control-plane has initialized successfully!
+
+    To start using your cluster, you need to run the following as a regular user:
+
+        mkdir -p $HOME/.kube
+        sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+        sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+    Alternatively, if you are the root user, you can run:
+
+        export KUBECONFIG=/etc/kubernetes/admin.conf
+
+    You should now deploy a pod network to the cluster.
+    Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+        https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+    Then you can join any number of worker nodes by running the following on each as root:
+
+    kubeadm join {master node ip}:6443 --token {token} \
+        --discovery-token-ca-cert-hash sha256:{sha256}
+    ```
+
+    - kubectl config 설정
+    ```bash
+    $ mkdir -p $HOME/.kube
+    $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    ```
+
+    - Master Node에도 Pod이 생성될 수 있도록 설정 Master Node ~/.bashrc (생략)
+    ```bash
+    sudo kubectl taint nodes --all node-role.kubernetes.io/master-
+    ```
+
+    - kubectl autocomplete를 설정, ~/.bashrc에 아래 내용 추가
+    ```bash
+    if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+        . /etc/bash_completion
+    fi
+
+    source <(kubectl completion bash)
+    ```
+
+- Worker node
+    - join
+    ```bash
+    $ sudo kubeadm join {master node ip}:6443 --token {token} \
+        --discovery-token-ca-cert-hash sha256:{sha256}
+    ```
+    
+    - init 결과
+    ```
+    [preflight] Running pre-flight checks
+    [preflight] Reading configuration from the cluster...
+    [preflight] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -o yaml'
+    [kubelet-start] Writing kubelet configuration to file "/var/lib/kubelet/config.yaml"
+    [kubelet-start] Writing kubelet environment file with flags to file "/var/lib/kubelet/kubeadm-flags.env"
+    [kubelet-start] Starting the kubelet
+    [kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...
+
+    This node has joined the cluster:
+    * Certificate signing request was sent to apiserver and a response was received.
+    * The Kubelet was informed of the new secure connection details.
+
+    Run 'kubectl get nodes' on the control-plane to see this node join the cluster.
+    ```
+
+- Calico 설치
+    ```bash
+    $ sudo kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+    ```
+
+- Calico node Error
+```bash
+$ kubectl get pods -A
+NAMESPACE     NAME                                       READY   STATUS    RESTARTS   AGE
+kube-system   calico-kube-controllers-6799f5f4b4-pflr4   1/1     Running   0          7m7s
+kube-system   calico-node-2tqzr                          0/1     Running   0          7m7s
+kube-system   calico-node-vlhtw                          0/1     Running   0          7m7s
+kube-system   coredns-6d4b75cb6d-4kbvp                   1/1     Running   0          16m
+kube-system   coredns-6d4b75cb6d-hsbxv                   1/1     Running   0          16m
+...
+```
+
+```bash
+$ kubectl describe pod calico-node-2tqzr -n kube-system
+Events:
+  Type     Reason     Age                    From               Message
+  ----     ------     ----                   ----               -------
+  Normal   Pulled     8m58s                  kubelet            Container image "docker.io/calico/cni:v3.24.1" already present on machine
+  Normal   Created    8m58s                  kubelet            Created container upgrade-ipam
+  Normal   Started    8m58s                  kubelet            Started container upgrade-ipam
+  Normal   Scheduled  8m58s                  default-scheduler  Successfully assigned kube-system/calico-node-2tqzr to kyglaptop
+  Normal   Started    8m57s                  kubelet            Started container install-cni
+  Normal   Pulled     8m57s                  kubelet            Container image "docker.io/calico/cni:v3.24.1" already present on machine
+  Normal   Created    8m57s                  kubelet            Created container install-cni
+  Normal   Pulled     8m55s                  kubelet            Container image "docker.io/calico/node:v3.24.1" already present on machine
+  Normal   Created    8m55s                  kubelet            Created container mount-bpffs
+  Normal   Started    8m55s                  kubelet            Started container mount-bpffs
+  Normal   Started    8m54s                  kubelet            Started container calico-node
+  Normal   Pulled     8m54s                  kubelet            Container image "docker.io/calico/node:v3.24.1" already present on machine
+  Normal   Created    8m54s                  kubelet            Created container calico-node
+  Warning  Unhealthy  8m52s (x2 over 8m53s)  kubelet            Readiness probe failed: calico/node is not ready: BIRD is not ready: Error querying BIRD: unable to connect to BIRDv4 socket: dial unix /var/run/calico/bird.ctl: connect: connection refused
+  Warning  Unhealthy  8m48s                  kubelet            Readiness probe failed: 2022-09-19 05:11:33.533 [INFO][233] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.49.1
+  Warning  Unhealthy  8m38s  kubelet  Readiness probe failed: 2022-09-19 05:11:43.622 [INFO][286] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.49.1
+  Warning  Unhealthy  8m28s  kubelet  Readiness probe failed: 2022-09-19 05:11:53.551 [INFO][323] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.49.1
+  Warning  Unhealthy  8m18s  kubelet  Readiness probe failed: 2022-09-19 05:12:03.608 [INFO][370] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.49.1
+  Warning  Unhealthy  8m8s  kubelet  Readiness probe failed: 2022-09-19 05:12:13.588 [INFO][392] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.49.1
+  Warning  Unhealthy  7m58s  kubelet  Readiness probe failed: 2022-09-19 05:12:23.612 [INFO][437] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.49.1
+  Warning  Unhealthy  7m48s  kubelet  Readiness probe failed: 2022-09-19 05:12:33.593 [INFO][474] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.49.1
+  Warning  Unhealthy  7m40s  kubelet  Readiness probe failed: 2022-09-19 05:12:41.793 [INFO][493] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.49.1
+  Warning  Unhealthy  3m58s (x25 over 7m38s)  kubelet  (combined from similar events): Readiness probe failed: 2022-09-19 05:16:23.579 [INFO][1278] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.49.1
+```
+
+```bash
+$ kubectl describe pod calico-node-vlhtw -n kube-system
+Events:
+  Type     Reason     Age                    From               Message
+  ----     ------     ----                   ----               -------
+  Normal   Pulled     9m36s                  kubelet            Container image "docker.io/calico/cni:v3.24.1" already present on machine
+  Normal   Scheduled  9m36s                  default-scheduler  Successfully assigned kube-system/calico-node-vlhtw to kyg-desktop
+  Normal   Created    9m35s                  kubelet            Created container upgrade-ipam
+  Normal   Started    9m35s                  kubelet            Started container upgrade-ipam
+  Normal   Started    9m34s                  kubelet            Started container install-cni
+  Normal   Pulled     9m34s                  kubelet            Container image "docker.io/calico/cni:v3.24.1" already present on machine
+  Normal   Created    9m34s                  kubelet            Created container install-cni
+  Normal   Pulled     9m30s                  kubelet            Container image "docker.io/calico/node:v3.24.1" already present on machine
+  Normal   Created    9m30s                  kubelet            Created container mount-bpffs
+  Normal   Started    9m30s                  kubelet            Started container mount-bpffs
+  Normal   Started    9m29s                  kubelet            Started container calico-node
+  Normal   Pulled     9m29s                  kubelet            Container image "docker.io/calico/node:v3.24.1" already present on machine
+  Normal   Created    9m29s                  kubelet            Created container calico-node
+  Warning  Unhealthy  9m26s (x3 over 9m28s)  kubelet            Readiness probe failed: calico/node is not ready: BIRD is not ready: Error querying BIRD: unable to connect to BIRDv4 socket: dial unix /var/run/calico/bird.ctl: connect: connection refused
+  Warning  Unhealthy  9m16s                  kubelet            Readiness probe failed: 2022-09-19 05:11:43.507 [INFO][249] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.0.8
+  Warning  Unhealthy  9m6s  kubelet  Readiness probe failed: 2022-09-19 05:11:53.475 [INFO][298] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.0.8
+  Warning  Unhealthy  8m56s  kubelet  Readiness probe failed: 2022-09-19 05:12:03.565 [INFO][327] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.0.8
+  Warning  Unhealthy  8m46s  kubelet  Readiness probe failed: 2022-09-19 05:12:13.566 [INFO][365] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.0.8
+  Warning  Unhealthy  8m36s  kubelet  Readiness probe failed: 2022-09-19 05:12:23.468 [INFO][395] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.0.8
+  Warning  Unhealthy  8m26s  kubelet  Readiness probe failed: 2022-09-19 05:12:33.478 [INFO][413] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.0.8
+  Warning  Unhealthy  8m16s  kubelet  Readiness probe failed: 2022-09-19 05:12:43.480 [INFO][449] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.0.8
+  Warning  Unhealthy  8m6s  kubelet  Readiness probe failed: 2022-09-19 05:12:53.447 [INFO][478] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.0.8
+  Warning  Unhealthy  4m33s (x25 over 8m6s)  kubelet  (combined from similar events): Readiness probe failed: 2022-09-19 05:16:26.428 [INFO][1213] confd/health.go 180: Number of node(s) with BGP peering established = 0
+calico/node is not ready: BIRD is not ready: BGP not established with 192.168.0.8
+```
+
+- 에러 해결 방법
+    ```bash
+    $ kubectl delete -f https://docs.projectcalico.org/manifests/calico.yaml
+    $ wget https://docs.projectcalico.org/manifests/calico.yaml
+    ```
+    - yaml 파일 수정
+    ```bash
+    $ vi calico.yaml
+    :?autodetect
+    ```
+
+    ```
+    ### 수정 전
+    # Auto-detect the BGP IP address.
+    - name: IP
+        value: "autodetect"
+    
+    # 수정 후
+    # Auto-detect the BGP IP address.
+    - name: IP
+        value: "autodetect"
+    - name: IP_AUTODETECTION_METHOD
+        value: "interface=ens*"
+    ```
+
+    - 재설치
+    ```bash
+    $ kubectl apply -f calico.yaml
+    ```
+
+- GPU 설정
+- https://github.com/NVIDIA/k8s-device-plugin
+```bash
+$ kubectl create -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.12.3/nvidia-device-plugin.yml
+```
+    - 참고
+    ```
+    Before v1.10 the versioning scheme of the device plugin had to match exactly the version of Kubernetes. After the promotion of device plugins to beta this condition was was no longer required. We quickly noticed that this versioning scheme was very confusing for users as they still expected to see a version of the device plugin for each version of Kubernetes.
+
+    This versioning scheme applies to the tags v1.8, v1.9, v1.10, v1.11, v1.12.
+
+    We have now changed the versioning to follow SEMVER. The first version following this scheme has been tagged v0.0.0.
+
+    Going forward, the major version of the device plugin will only change following a change in the device plugin API itself. For example, version v1beta1 of the device plugin API corresponds to version v0.x.x of the device plugin. If a new v2beta2 version of the device plugin API comes out, then the device plugin will increase its major version to 1.x.x.
+
+    As of now, the device plugin API for Kubernetes >= v1.10 is v1beta1. If you have a version of Kubernetes >= 1.10 you can deploy any device plugin version > v0.0.0.
+    ```
+
+- GPU 확인
+```bash
+$ kubectl get nodes "-o=custom-columns=NAME:.metadata.name,GPU:.status.allocatable.nvidia\.com/gpu"
+NAME        GPU
+worker      1
+master      <none>
+```
+
+- Running GPU Jobs
+```bash
+$ cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: gpu-pod
+spec:
+  restartPolicy: Never
+  containers:
+    - name: cuda-container
+      image: nvcr.io/nvidia/k8s/cuda-sample:vectoradd-cuda11.1
+      resources:
+        limits:
+          nvidia.com/gpu: 1 # requesting 1 GPU
+  tolerations:
+  - key: nvidia.com/gpu
+    operator: Exists
+    effect: NoSchedule
+EOF
+```
+
+```bash
+$ kubectl logs gpu-pod
+[Vector addition of 50000 elements]
+Copy input data from the host memory to the CUDA device
+CUDA kernel launch with 196 blocks of 256 threads
+Copy output data from the CUDA device to the host memory
+Test PASSED
+Done
+
+$ kubectl get pods
+NAME      READY   STATUS      RESTARTS   AGE
+gpu-pod   0/1     Completed   0          80s
+```

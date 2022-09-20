@@ -1,0 +1,106 @@
+---
+layout: custom
+title: k8s CrashLoopBackOff 문제
+date: 2022-09-20 14:06:00 +0900
+last_modified_at: 2022-09-20 14:06:00 +0900
+category: k8s
+tags: ["k8s"]
+published: False
+
+---
+> k8s CrashLoopBackOff 문제와 sleep
+
+- pod 생성
+    - cuda11.yaml
+    ```
+    apiVersion: v1
+    kind: Pod
+    metadata:
+    name: cuda11-pod
+    spec:
+        containers:
+        - name: cuda-container
+            image: nvidia/cuda:11.4.0-cudnn8-devel-ubuntu18.04
+            imagePullPolicy: IfNotPresent
+            resources:
+                limits:
+                    nvidia.com/gpu: 1
+    ```
+
+- CrashLoopBackOff 발생
+    ```bash
+    $ kubectl get pods -A
+    NAMESPACE     NAME                                       READY   STATUS             RESTARTS       AGE
+    default       cuda11-pod                                 0/1     CrashLoopBackOff   3 (46s ago)    90s
+    ...
+    ```
+
+- log 확인
+    ```bash
+    $ kubectl describe pods cuda11-pod
+    ...
+    Events:
+    Type     Reason     Age                From               Message
+    ----     ------     ----               ----               -------
+    Normal   Scheduled  93s                default-scheduler  Successfully assigned default/cuda11-pod to {gpu-worker}
+    Normal   Pulled     50s (x4 over 92s)  kubelet            Container image "nvidia/cuda:11.4.0-cudnn8-devel-ubuntu18.04" already present on machine
+    Normal   Created    49s (x4 over 92s)  kubelet            Created container cuda-container
+    Normal   Started    49s (x4 over 91s)  kubelet            Started container cuda-container
+    Warning  BackOff    11s (x8 over 88s)  kubelet            Back-off restarting failed container
+    ```
+
+    ```bash
+    $ kubectl logs cuda11-pod
+    $
+    $ kubectl logs cuda11-pod --previous
+    $
+    ```
+    - log가 없다...?
+
+- 해결방법 __sleep__
+    - pod 삭제 `kubectl delete pods cuda11-pod`
+    - [https://kubernetes.io/docs/concepts/workloads/pods/init-containers/](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/)
+    - [https://stackoverflow.com/questions/52570488/kubernetes-pod-stuck-in-crashloopbackoff?rq=1](https://stackoverflow.com/questions/52570488/kubernetes-pod-stuck-in-crashloopbackoff?rq=1)
+    - cuda11.yaml 에 "command: ['sh', '-c', 'echo The app is running! && sleep 3600']" 추가
+    ```
+    apiVersion: v1
+    kind: Pod
+    metadata:
+    name: cuda11-pod
+    spec:
+        containers:
+        - name: cuda-container
+            image: nvidia/cuda:11.4.0-cudnn8-devel-ubuntu18.04
+            imagePullPolicy: IfNotPresent
+            resources:
+                limits:
+                    nvidia.com/gpu: 1
+            command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+    ```
+
+- 확인
+    ```bash
+    $ kubectl get pods -A
+    NAMESPACE     NAME                                       READY   STATUS      RESTARTS       AGE
+    default       cuda11-pod                                 1/1     Running     0              15s
+    ...
+    ```
+    어라..?
+    
+    ```bash
+    $ kubectl describe pods cuda11-pod
+    Events:
+    Type    Reason     Age   From               Message
+    ----    ------     ----  ----               -------
+    Normal  Scheduled  90s   default-scheduler  Successfully assigned default/cuda11-pod to {gpu-worker}
+    Normal  Pulled     88s   kubelet            Container image "nvidia/cuda:11.4.0-cudnn8-devel-ubuntu18.04" already present on machine
+    Normal  Created    88s   kubelet            Created container cuda-container
+    Normal  Started    87s   kubelet            Started container cuda-container
+    ...
+    ```
+    어라..??
+
+    ```bash
+    $ kubectl exec -it cuda11-pod -- /bin/bash
+    root@cuda11-pod:/#
+    ```

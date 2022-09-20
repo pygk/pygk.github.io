@@ -16,24 +16,24 @@ published: false
 - 참고: [https://mirrors.tripadvisor.com/centos-vault/3.9/docs/html/rhel-sag-en-3/s1-swap-removing.html](https://mirrors.tripadvisor.com/centos-vault/3.9/docs/html/rhel-sag-en-3/s1-swap-removing.html)
 
 - 사용중인 swap space size 확인
-  ```bash
-  $ free -h
-  ```
+    ```bash
+    $ free -h
+    ```
 
 - swap partition 검색 및 식별
-  ```bash
-  $ lsblk
-  ```
+    ```bash
+    $ lsblk
+    ```
 
 - disable all swaps
-  ```bash
-  $ swapoff -a
-  ```
+    ```bash
+    $ swapoff -a
+    ```
 
 - Remove its entry from /etc/fstab
-  ```bash
-  $ sudo vi /etc/fstab
-  ```
+    ```bash
+    $ sudo vi /etc/fstab
+    ```
 
 - Remove the partition using parted:
 
@@ -50,4 +50,4 @@ Changes take effect immediately; you must type the correct minor number.
 Type quit to exit parted.
 
 
-  - fdisk 명령으로 swap 파티션의 type을 변경
+    - fdisk 명령으로 swap 파티션의 type을 변경

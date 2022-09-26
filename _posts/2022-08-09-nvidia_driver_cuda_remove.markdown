@@ -111,3 +111,8 @@ $ sudo cp ./cuda/include/cudnn*.h /usr/local/cuda/include
 $ sudo cp -P ./cuda/lib64/libcudnn* /usr/local/cuda/lib64 
 $ sudo chmod a+r /usr/local/cuda/include/cudnn*.h /usr/local/cuda/lib64/libcudnn*
 ```
+
+## 6. ubuntu 커널 업데이트 후 nvidia-smi를 할 수 없는 경우
+```
+$ sudo sh NVIDIA-Linux-x86_64-470.42.01.run --dkms
+```

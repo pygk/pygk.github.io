@@ -177,6 +177,7 @@ published: False
     ```
 
     5. 계정 토큰 조회
+    ```
     $ kubectl apply -f k8s-dashboard-user.yaml
     serviceaccount/{admin} created
     clusterrolebinding.rbac.authorization.k8s.io/{admin} created

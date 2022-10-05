@@ -2,7 +2,7 @@
 layout: custom
 title: nvidia-driver, cuda 완전 삭제 및 재설치
 date: 2022-08-10 19:59:00 +0900
-last_modified_at: 2022-08-10 19:59:00 +0900
+last_modified_at: 2022-09-26 17:09:00 +0900
 category: ubuntu
 tags: ["nvidia-driver", "cuda"]
 published: false
@@ -113,6 +113,7 @@ $ sudo chmod a+r /usr/local/cuda/include/cudnn*.h /usr/local/cuda/lib64/libcudnn
 ```
 
 ## 6. ubuntu 커널 업데이트 후 nvidia-smi를 할 수 없는 경우
+220926 update
 ```
 $ sudo sh NVIDIA-Linux-x86_64-470.42.01.run --dkms
 ```

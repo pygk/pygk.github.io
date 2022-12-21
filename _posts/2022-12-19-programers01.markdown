@@ -2,7 +2,7 @@
 layout: custom
 title: programers 억억단을 외우자
 date: 2022-12-19 21:15:00 +0900
-last_modified_at: 2022-12-19 10:23:00 +0900
+last_modified_at: 2022-12-20 02:00:00 +0900
 category: algorithm
 tags: ["programers", "dynamic programming"]
 published: True

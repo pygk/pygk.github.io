@@ -1,46 +1,112 @@
 ---
-layout: single
-title: IAM
+layout: custom
+title: EC2 Basics
 date: 2022-03-06 21:52:00 +0900
-last_modified_at: 2022-03-06 21:52:00 +0900
+last_modified_at: 2022-12-22 16:08:00 +0900
 category: SAA-C02
-tags: ["SAA-C02", "IAM"]
-published: false
+tags: ["AWS", "SAA-C02", "EC2"]
+published: False
 ---
-> Identity and Access Management
 
-## 1. IAM
-### 1.1. User & Groups
-* IAM = Identity and Access Management, Global service
-* IAM = ID 및 액세스 관리, 글로벌 서비스
+> Elastic Compute Cloud
 
-* __Root account__ created by default, shouldn’t be used or shared
-* 기본적으로 생성된 __루트 계정__은 사용되거나 공유되지 않아야 합니다.
+## 1. EC2
+### 1.1. EC2
+* EC2 is one of the most popular of AWS' offering
+* EC2 = Elastic Compute Cloud = Infrastructure as a Service
+* It mainly consists in the capablity of :
+    * Renting virtual machines (EC2)
+    * Storing data on virtual drive (EBS)
+    * Distributing load across machines (ELB)
+    * Scaling the services using an auto-scaling group (ASG)
+* Knowing EC2 is fundamental to understand how the Cloud works
 
-* __Users__ are people within your organization, and can be grouped
-* __사용자__는 조직 내의 사람들이며 그룹화할 수 있습니다.
+* EC2는 가장 인기 있는 AWS 제품 중 하나임
+* EC2 = 탄력적 컴퓨팅 클라우드 = 서비스로서의 인프라 (IaaS)
+* 주로 다음과 같은 기능으로 구성됨
+    * 가상 머신 임대(EC2)
+    * 가상 드라이브(EBS)에 데이터 저장
+    * ELB(기계 전체에 부하 분산)
+    * ASG(Auto-Scaling Group)를 이용한 서비스 확장
+* 클라우드 작동 방식을 이해하려면 EC2를 알아야 함
 
-* __Groups__ only contain users, not other groups
-* __그룹__은 다른 그룹이 아닌 사용자만 포함합니다.
+### 1.2. EC2 sizing & configuration options
+* Operating System (OS): Linux, Windows or Mac OS
+* How much compute power & cores (CPU)
+* How much random-access memory(RAM)
+* How much storage space:
+    * Network-attached (EBS & EFS)
+    * hardware (EC2 Instance Store)
+* Network card: speed pf the card, public IP address
+* Firewall rules: security group
+* Bootstrap script (configure at first launch): EC2 User Data
 
-* Users don’t have to belong to a group, and user can belong to multiple groups
-* 사용자는 그룹에 속할 필요가 없으며 여러 그룹에 속할 수 있습니다.
+* 얼마나 많은 컴퓨팅 파워 및 코어(CPU)
+* 얼마나 많은 랜덤 액세스 메모리(RAM)
+* 얼마나 많은 저장 공간:
+    * 네트워크 연결(EBS & EFS)
+    * 하드웨어(EC2 인스턴스 스토어)
+* 네트워크 카드: 카드의 속도, 공용 IP 주소
+* 방화벽 규칙: 보안 그룹
+* 부트스트랩 스크립트(처음 시작할 때 구성): EC2 사용자 데이터
+
+### 1.3. EC2 User Data
+* It is possible to bootstrap our instances using an __EC2 User data__ script. 
+* __bootstrapping__ means launching commands when a machine starts
+* That script is __only run once__ at the instance __first start__
+* EC2 user data is used to automate boot tasks such as:
+    * Installing updates
+    * Installing software
+    * Downloading common files from the internet
+    * Anything you can think of
+* The EC2 User Data Script runs with the root user
+
+* __EC2 사용자 데이터__ 스크립트를 사용하여 인스턴스를 부트스트랩할 수 있습니다.
+* __부트스트래핑__ 은 머신이 시작될 때 명령을 실행하는 것을 의미합니다.
+* 해당 스크립트는 인스턴스가 __처음 시작될 때 한 번만 실행__ 됩니다.
+* EC2 사용자 데이터는 다음과 같은 부팅 작업을 자동화하는 데 사용됩니다.
+    * 업데이트 설치
+    * 소프트웨어 설치
+    * 인터넷에서 공통 파일 다운로드
+    * 당신이 생각할 수 있는 모든 것
+* EC2 사용자 데이터 스크립트는 루트 사용자로 실행됩니다.
 
 
-### 1.2. Permissions
-* __Users or Groups__ can be assigned JSON documents called policies
-* __사용자 또는 그룹__에 정책이라는 JSON 문서를 할당할 수 있습니다.
-
-* These policies define the __permissions__ of the users
-* 이러한 정책은 사용자의 __권한__을 정의합니다.
-
-* In AWS you apply the __least privilege principle__: don’t give more permissions than a user needs
-* AWS에서는 __최소 권한 원칙__을 적용합니다. 사용자가 필요로 하는 것보다 많은 권한을 부여하지 마십시오.
 
 
-## 2. IAM Policies
-### 2.1 IAM Policies inheritance (상속)
-* 그룹내의 사용자는 그룹의 정책을 상속 받음.
+
+## 2. EC2 Instance Types
+### 2.1 Overview
+* m5.2xlarge
+    * m: instance class 
+    * 5: generation (AWS improves them over time)
+    * 2xlarge: size within the instance class
+
+### 2.2 EC2 Instance Types – General Purpose
+* Great for compute-intensive tasks that require high performance processors:
+    * Batch processing workloads
+    * Media transcoding
+    * High performance web servers
+    * High performance computing (HPC)
+    * Scientific modeling & machine learning
+    * Dedicated gaming servers
+
+### 2.3 EC2 Instance Types – Memory Optimized
+* Fast performance for workloads that process large data sets in memory
+* Use cases: 
+    * High performance, relational/non-relational databases
+    * Distributed web scale cache stores
+    * In-memory databases optimized for BI (business intelligence)
+    * Applications performing real-time processing of big unstructured data
+
+### 2.3 EC2 Instance Types – Memory Optimized
+* Great for storage-intensive tasks that require high, sequential read and write access to large data sets on local storage
+* Use cases: 
+    * High frequency online transaction processing (OLTP) systems
+    * Relational & NoSQL databases
+    * Cache for in-memory databases (for example, Redis)
+    * Data warehousing applications
+    * Distributed file systems
 
 
 ## 3. IAM MFA
@@ -222,6 +288,30 @@ MFA 디바이스를 사용하여 Root 계정을 보호. (Physical Device)
 
 * __Never share IAM users & Access Keys__
 * __IAM 사용자 & 액세스 키 공유 금지__
+
+
+## 8. Summary
+* User: mapped to a physical user, has a password for AWS Console
+* 사용자: 물리적 사용자로 매핑됨, AWS 콘솔에 대한 암호가 있음
+
+* Group: contains users only
+* 그룹: 사용자만 포함
+
+* policies: JSON document that outlines permissions for users or groups
+* 정책: 사용자 또는 그룹에 대한 권한을 설명하는 JSON 문서
+
+* Roles: for EC2 instances or AWS services
+* 역할: EC2 인스턴스 또는 AWS 서비스용
+
+* Security: MFA + Password Policy
+* 보안: MFA + 암호 정책
+
+* Access Keys: access AWS using the CLI or SDK
+* 액세스 키: CLI 또는 SDK를 사용하여 AWS에 액세스
+
+* Audit: IAM Credential Reports & IAM Access Advisor
+* 감사: IAM 자격 증명 보고서 및 IAM 액세스 어드바이저
+
 
 ### Reference
 Stephane Maarek,【글로벌 Best】 AWS Certified Solutions Architect Associate 시험합격!, Udemy

@@ -1,11 +1,11 @@
 ---
 layout: custom
 title: EC2 Basics
-date: 2022-03-06 21:52:00 +0900
-last_modified_at: 2022-12-22 16:08:00 +0900
+date: 2022-12-22 16:08:00 +0900
+last_modified_at: 2022-12-26 23:24:00 +0900
 category: SAA-C02
 tags: ["AWS", "SAA-C02", "EC2"]
-published: False
+published: True
 ---
 
 > Elastic Compute Cloud
@@ -72,15 +72,17 @@ published: False
 * EC2 사용자 데이터 스크립트는 루트 사용자로 실행됩니다.
 
 
-
-
-
 ## 2. EC2 Instance Types
 ### 2.1 Overview
 * m5.2xlarge
     * m: instance class 
     * 5: generation (AWS improves them over time)
     * 2xlarge: size within the instance class
+
+* m5.2xlarge
+    * m: 인스턴스 클래스
+    * 5: 세대(AWS는 시간이 지남에 따라 개선함)
+    * 2xlarge: 인스턴스 클래스 내 크기
 
 ### 2.2 EC2 Instance Types – General Purpose
 * Great for compute-intensive tasks that require high performance processors:
@@ -91,6 +93,14 @@ published: False
     * Scientific modeling & machine learning
     * Dedicated gaming servers
 
+* 고성능 프로세서가 필요한 컴퓨팅 집약적인 작업에 적합:
+    * 일괄 처리 워크로드
+    * 미디어 트랜스코딩
+    * 고성능 웹 서버
+    * 고성능 컴퓨팅(HPC)
+    * 과학적 모델링 및 기계 학습
+    * 전용 게임 서버
+
 ### 2.3 EC2 Instance Types – Memory Optimized
 * Fast performance for workloads that process large data sets in memory
 * Use cases: 
@@ -98,6 +108,13 @@ published: False
     * Distributed web scale cache stores
     * In-memory databases optimized for BI (business intelligence)
     * Applications performing real-time processing of big unstructured data
+
+* 메모리에서 대용량 데이터 세트를 처리하는 워크로드를 위한 빠른 성능
+* 사용 사례:
+    * 고성능, 관계형/비관계형 데이터베이스
+    * 분산 웹 스케일 캐시 저장소
+    * BI(비즈니스 인텔리전스)에 최적화된 인메모리 데이터베이스
+    * 대용량 비정형 데이터를 실시간으로 처리하는 애플리케이션
 
 ### 2.3 EC2 Instance Types – Memory Optimized
 * Great for storage-intensive tasks that require high, sequential read and write access to large data sets on local storage
@@ -108,209 +125,304 @@ published: False
     * Data warehousing applications
     * Distributed file systems
 
-
-## 3. IAM MFA
-### 3.1 Password Policy
-* Strong passwords = higher security for your account
-* 강력한 암호 = 계정에 대한 높은 보안성
-
-* In AWS, you can setup a password policy:
-* AWS에서 암호 정책을 설정할 수 있습니다:
-    * Set a minimum password length
-    * 최소 암호 길이 설정
-
-    * Require specific character types:
-    * 특정 문자 유형 필요:
-
-        * including uppercase letters
-        * 대문자 포함
-
-        * lowercase letters
-        * 소문자
-
-        * numbers
-        * 숫자
-
-        * non-alphanumeric characters
-        * 비유사적 문자
-
-    * Allow all IAM users to change their own passwords
-    * 모든 IAM 사용자가 자신의 암호를 변경할 수 있도록 허용
-
-    * Require users to change their password after some time (password expiration)
-    * 일정 시간 후 사용자에게 비밀번호 변경 요구(비밀번호 만료)
-
-    * Prevent password re-use
-    * 암호 재사용 방지
-
-### 3.2 (중요!) Multi Factor Authentication - MFA
-AWS에서 필수조항이고 사용하도록 강력 권고됨.
-MFA 디바이스를 사용하여 Root 계정을 보호. (Physical Device)
-
-* Users have access to your account and can possibly change configurations or delete resources in your AWS account
-* 사용자는 계정에 액세스할 수 있으며 AWS 계정의 구성을 변경하거나 리소스를 삭제할 수 있습니다.
-
-* __You want to protect your Root Accounts and IAM users__
-* __루트 계정 및 IAM 사용자를 보호하려는 경우__
-
-* MFA = password you know + __security device you own__
-* 알고 있는 MFA = 암호 + __소유하고 있는 보안 장치__
-
-* __Main benefit of MFA__: if a password is stolen or hacked, the account is not compromised
-* __MFA의 주요 이점__: 암호를 도난당하거나 해킹당해도 계정은 손상되지 않습니다.
-
-* Password + MFA (MFA 생성 토큰) => Successful login
-
-### 3.3 (중요!) MFA devices options in AWS
-* Virtual MFA device: Support for multiple tokens on a single device.
-    * Google Authenticator (phone only) - 한 번에 하나의 폰에서만 작동
-    * Authy (multi-device) - 컴퓨터와 폰에서 함께 사용 가능
-
-* Universal 2nd Factor (U2F) Security Key: Support for multiple root and IAM users using a single security key
-    * YubiKey by Yubico (3rd party) - Physical Device(USB)
-
-* Hardware Key Fob MFA Device
-    * Provided by Gemalto (3rd party)
-
-* Hardware Key Fob MFA Device for AWS GovCloud (US)
-    * Provided by SurePassID (3rd party)
+* 로컬 스토리지의 대용량 데이터 세트에 대한 높은 순차적 읽기 및 쓰기 액세스가 필요한 스토리지 집약적 작업에 적합
+* 사용 사례:
+    * 고주파 온라인 거래 처리(OLTP) 시스템
+    * 관계형 및 NoSQL 데이터베이스
+    * 인메모리 데이터베이스용 캐시(예: Redis)
+    * 데이터 웨어하우징 애플리케이션
+    * 분산 파일 시스템
 
 
-## 4. IAM Access key
-### 4.1 Access AWS
-* To access AWS, you have three options:
-* AWS에 액세스하려면 다음 세 가지 옵션을 사용할 수 있습니다:
-    * __AWS Management Console__ (protected by password + MFA)
-    * __AWS Command Line Interface (CLI)__: protected by access keys
-    * __AWS Software Developer Kit (SDK)__ - for code: protected by access keys
-* Access Keys are generated through the AWS Console
-* 액세스 키는 AWS 콘솔을 통해 생성됩니다.
+## 3. Security Groups
+### 3.1 Security Groups
+* Security Groups are the fundamental of network security in AWS
+* They control how traffic is allowed into or out of our EC2 Instances.
+* Security groups only contain __allow__ rules
+* Security groups rules can reference by IP or by security group
 
-* Users manage their own access keys
-* 사용자가 자신의 액세스 키 관리
+* 보안 그룹은 AWS 네트워크 보안의 기본입니다.
+* EC2 인스턴스로 들어오고 나가는 트래픽이 허용되는 방식을 제어합니다.
+* 보안 그룹에는 __허용__ 규칙만 포함됩니다.
+* 보안 그룹 규칙은 IP 또는 보안 그룹에서 참조할 수 있습니다.
 
-* __Access Keys are secret, just like a password. Don’t share them__
-* __액세스 키는 비밀번호와 마찬가지로 비밀입니다. 공유하지마세요.__
+* Security groups are acting as a “firewall” on EC2 instances
+* They regulate:
+    * Access to Ports
+    * Authorised IP ranges – IPv4 and IPv6
+    * Control of inbound network (from other to the instance)
+    * Control of outbound network (from the instance to other)
 
-* Access Key ID ~= username
-* Secret Access Key ~= password
+* 보안 그룹은 EC2 인스턴스에서 "방화벽" 역할을 합니다.
+* 규제 대상:
+    * 포트에 대한 액세스
+    * 승인된 IP 범위 – IPv4 및 IPv6
+    * 인바운드 네트워크 제어(다른 인스턴스에서 인스턴스로)
+    * 아웃바운드 네트워크 제어(인스턴스에서 다른 인스턴스로)
 
-### 4.2 AWS CLI
-* A tool that enables you to interact with AWS services using commands in your command-line shell
-* command-line shell의 명령을 사용하여 AWS 서비스와 상호 작용할 수 있는 도구
+### 3.2 Security Groups Diagram
+![Untitled](/assets/img/aws_saa_c02/221226_ec2_security_groups_diagram.JPG)
+* ec2 instance
+* inbound 규칙과 outbound 규칙이 있는 하나의 security group
+* 22번 포트 허용
+    * 허용된 ip의 트래픽은 ec2 instance로 이동할 수 있음
+    * 다른 ip는 방화벽이 차단하기 때문에 ec2 instance에 액세스 불가 (time out)
+* outbound 디폴트는 모든 트래픽 허용
 
-* Direct access to the public APIs of AWS services
-* AWS 서비스의 공용 API에 직접 액세스
+### 3.3 Security Groups Good to know (알아두면 좋은 정보)
+* Can be attached to multiple instances
+* Locked down to a region / VPC combination
+* Does live “outside” the EC2 – if traffic is blocked the EC2 instance won’t see it
+* __It’s good to maintain one separate security group for SSH access__
+* If your application is not accessible (time out), then it’s a security group issue
+* If your application gives a “connection refused“ error, then it’s an application error or it’s not launched
+* All inbound traffic is __blocked__ by default
+* All outbound traffic is __authorised__ by default
 
-* You can develop scripts to manage your resources
-* 스크립트를 개발하여 리소스를 관리할 수 있습니다.
+* 여러 인스턴스에 연결 가능
+* 리전/VPC 조합으로 잠김
+* EC2 "외부"에서 작동합니다. 트래픽이 차단되면 EC2 인스턴스에서 볼 수 없습니다.
+* __SSH 접속을 위한 별도의 보안 그룹 하나를 유지하는 것이 좋습니다__
+* 애플리케이션에 액세스할 수 없는 경우(시간 초과) 보안 그룹 문제입니다.
+* 응용 프로그램에서 "연결 거부" 오류가 발생하면 응용 프로그램 오류이거나 실행되지 않은 것입니다.
+* 모든 인바운드 트래픽은 기본적으로 __차단__됩니다.
+* 모든 아웃바운드 트래픽은 기본적으로 __승인__됩니다.
 
-* It’s open-source https://github.com/aws/aws-cli
+### 3.4 Referencing other Security Groups Diagram
+![Untitled](/assets/img/aws_saa_c02/221226_ec2_security_groups_diagram_2.JPG)
+* 로드 밸런서 사용
+* 보안 그룹의 다른 보안 그룹을 참조하는 방법
 
-* Alternative to using AWS Management Console
-* AWS Management Console을 사용하는 방법
+* security group 1 inbound (허용 - security group 1, security group 2)
+* 새로운 ec2 instance 를 생성했을 때, (올바른 보안 그룹에 연결되었기 때문에) __ip와 상관없이__ 다른 인스턴스를 통해 바로 통신 가능
+* security group 3 은 security group 1 의 인바운드 규칙으로 거부됨
 
-### 4.3 AWS SDK
-* AWS Software Development Kit (AWS SDK)
-* AWS 소프트웨어 개발 키트(AWS SDK)
+### 3.5 Classic Ports to know (중요!)
+* 22 = SSH (Secure Shell) - log into a Linux instance
+* 21 = FTP (File Transfer Protocol) – upload files into a file share
+* 22 = SFTP (Secure File Transfer Protocol) – upload files using SSH
+* 80 = HTTP – access unsecured websites
+* 443 = HTTPS – access secured websites
+* 3389 = RDP (Remote Desktop Protocol) – log into a Windows instance
 
-* Language-specific APIs (set of libraries)
-* 언어 - 특정 API(라이브러리 집합)
-
-* Enables you to access and manage AWS services programmatically
-* 프로그래밍 방식으로 AWS 서비스에 액세스하고 관리할 수 있습니다.
-
-* Embedded within your application
-* 어플리케이션에 포함됨
-
-* Supports
-    * SDKs (JavaScript, Python, PHP, .NET, Ruby, Java, Go, Node.js, C++)
-    * Mobile SDKs (Android, iOS, ...)
-    * IoT Device SDKs (Embedded C, Arduino, ...)
-
-* Example: AWS CLI is built on AWS SDK for Python
-* 예: AWS CLI는 Python용 AWS SDK를 기반으로 합니다.
-
-
-## 5. IAM Roles for Services
-* Some AWS service will need to perform actions on your behalf
-* 일부 AWS 서비스는 사용자 대신 작업을 수행해야 합니다.
-
-* To do so, we will assign __permissions__ to AWS services with __IAM Roles__
-* 이를 위해, __IAM Roles__이 있는 AWS 서비스에 __permissions_를 할당하겠습니다.
-
-* Common roles: 공통 역할:
-    * EC2 Instance Roles
-    * Lambda Function Roles
-    * Roles for CloudFormation
-
-
-## 6. IAM Security Tools
-* IAM Credentials Report (account-level)
-* IAM 자격 증명 보고서(계정 수준)
-
-* a  report that lists all your account's users and the status of their various credentials
-* 계정의 모든 사용자와 다양한 인증 정보의 상태를 나열하는 보고서
-
-* IAM Access Advisor (user-level)
-* IAM Access Advisor(사용자 레벨)
-    * Access advisor shows the service permissions granted to a user and when those services were last accessed.
-    * 액세스 관리자에는 사용자에게 부여된 서비스 권한과 해당 서비스에 마지막으로 액세스한 시간이 표시됩니다.
-    
-    * You can use this information to revise your policies.
-    * 이 정보를 사용하여 정책을 수정할 수 있습니다.
+* 22 = SSH(Secure Shell) - Linux 인스턴스에 로그인
+* 21 = FTP(파일 전송 프로토콜) – 파일 공유에 파일 업로드
+* 22 = SFTP(보안 파일 전송 프로토콜) – SSH를 사용하여 파일 업로드
+* 80 = HTTP – 보안되지 않은 웹사이트에 액세스
+* 443 = HTTPS – 보안 웹사이트 액세스
+* 3389 = RDP(원격 데스크톱 프로토콜) – Windows 인스턴스에 로그인
 
 
-## 7. IAM Guidelines & Best Practices
-* Don’t use the root account except for AWS account setup
-* AWS 계정 설정을 제외하고 루트 계정을 사용하지 않습니다.
+## 4. EC2 Instances
+### 4.1 EC2 Instances Purchasing Options (중요!!)
+사례에 따라 최대로 비용을 절감할 수 있고 특정 규칙을 준수할 수 있는 최적의 EC2 Instance 구매 옵션을 물어보는 문제
 
-* One physical user = One AWS __user__
-* 물리적 사용자 1명 = AWS __user__ 1명
+* __On-Demand Instances__ – short workload, predictable pricing, pay by second
+* __Reserved__ (1 & 3 years)
+    * __Reserved Instances__ – long workloads 
+    * __Convertible Reserved Instances__ – long workloads with flexible instances
+    * __Scheduled Reserved Instances__ - every Thursday beween 3 and 6 pm
+* __Savings Plans__ (1 & 3 years) – commitment to an amount of usage, long workload
+* __Spot Instances__ – short workloads, cheap, can lose instances (less reliable)
+* __Dedicated Hosts__ – book an entire physical server, control instance placement
+* __Dedicated Instances__ – no other customers will share your hardware
+* __Capacity Reservations__ – reserve capacity in a specific AZ for any duration
 
-* __Assign users to groups__ and assign permissions to groups
-* __그룹__에 사용자 할당 및 그룹에 권한 할당
+* __온디맨드 인스턴스__ – 짧은 워크로드, 예측 가능한 가격, 초당 지불
+* __예약__ (1 & 3 년, 최소 1년)
+    * 예약 인스턴스 – 긴 워크로드
+    * 전환 가능한 예약 인스턴스 – 유연한 인스턴스를 사용한 긴 워크로드
+    * 정기 예약 인스턴스 - 매주 목요일 오후 3시~6시
+        * Scheduled Reserved Instances 는 현재 사용되지 않지만 시험에 나올 수는 있음
+* __저축 계획__(1년 및 3년) – 사용량, 긴 작업량에 대한 약정
+* __스팟 인스턴스__ – 짧은 워크로드, 저렴, 인스턴스 손실 가능(신뢰도 낮음)
+* __전용 호스트__ – 전체 물리적 서버 예약, 인스턴스 배치 제어
+* __전용 인스턴스__ – 다른 고객이 귀하의 하드웨어를 공유하지 않습니다.
+* __용량 예약__ – 모든 기간 동안 특정 AZ의 용량 예약
 
-* Create a __strong password policy__
-* __강력한 암호 정책__ 생성
+### 4.2 EC2 On Demand (중요!!)
+* Pay for what you use:
+    * Linux or Windows - billing per second, after the first minute
+    * All other operating systems - billing per hour 
+* Has the highest cost but no upfront payment
+* No long-term commitment
 
-* Use and enforce the use of __Multi Factor Authentication (MFA)__
-* __MFA(Multiple Factor Authentication)__ 의 사용 및 적용
+* Recommended for __short-term__ and __un-interrupted__ workloads, where you can't predict how the application will behave
 
-* Create and use __Roles__ for giving permissions to AWS services
-* AWS 서비스에 사용 권한을 부여하는 데 __Roles__ 를 생성하고 사용합니다.
+* 사용한 만큼 지불:
+    * Linux 또는 Windows - 처음 1분이 지나면 초당 청구
+    * 기타 모든 운영 체제 - 시간당 청구
+* 비용이 가장 높지만 선불은 없음
+* 장기 약정 없음 (사용 해지, 중지, 시작이 언제든 가능)
 
-* Use Access Keys for Programmatic Access (CLI / SDK)
-* 프로그래밍 방식 액세스를 위한 액세스 키 사용(CLI/SDK)
+* 애플리케이션이 어떻게 작동할지 예측할 수 없는 __단기적__ 이고 __중단 없는__ 워크로드에 권장됩니다.
 
-* Audit permissions of your account with the IAM Credentials Report
-* IAM 자격 증명 보고서를 사용하여 계정의 권한 감사
+### 4.3 EC2 Reserved Instances (중요!!)
+* Up to __72%__ discount compared to On-demand
+* You reserve a specific instance attributes __(Instance Type, Region, Tenancy, OS)__
+* __Reservation Period__ – __1 year__ (+discount) or __3 years__ (+++discount)
+* __Payment Options__ – __No Upfront__ (+), __Partial Upfront__ (++), __All Upfront__ (+++)
+* __Reserved Instance’s Scope__ – __Regional__ or __Zonal__ (reserve capacity in an AZ)
+* Recommended for steady-state usage applications (think database)
+* You can buy and sell in the Reserved Instance Marketplace
 
-* __Never share IAM users & Access Keys__
-* __IAM 사용자 & 액세스 키 공유 금지__
+* __Convertible Reserved Instance__
+    * Can change the EC2 instance type, instance family, OS, scope and tenancy
+    * Up to __66%__ discount
+        * _Note_: the % discounts are different from the video as AWS change them over time – the exact numbers are not needed for the exam. This is just for illustrative purposes
 
+* __Scheduled Reserved Instances__
+    * launch within time window you reserve
+    * When you require a fraction of day/week /month
+    * Still commitment over 1 to 3 years
 
-## 8. Summary
-* User: mapped to a physical user, has a password for AWS Console
-* 사용자: 물리적 사용자로 매핑됨, AWS 콘솔에 대한 암호가 있음
+* 온디맨드 대비 최대 __72%__ 할인
+* 특정 인스턴스 속성 __(인스턴스 유형, 지역, 테넌시, OS)__ 을 예약합니다.
+* __예약기간__ – __1년__(+할인) 또는 __3년__(+++할인)
+* 결제 옵션 – __선결제 없음__(+), __부분 선결제__(++), __전체 선결제__(+++)
+* __예약 인스턴스의 범위__ – __지역__ 또는 __구역__(AZ에서 용량 예약)
+* 꾸준한 사용 애플리케이션에 권장됨 (데이터베이스)
+* 예약 인스턴스 마켓플레이스에서 구매 및 판매 가능
 
-* Group: contains users only
-* 그룹: 사용자만 포함
+* __전환형 예약 인스턴스__
+    * EC2 인스턴스 유형, 인스턴스 제품군, OS, 범위 및 테넌시를 변경할 수 있습니다.
+    * 최대 __66%__ 할인
+        * _참고_: % 할인은 AWS가 시간이 지남에 따라 변경하므로 동영상과 다릅니다. 시험에는 정확한 수치가 필요하지 않습니다. 이것은 단지 설명을 위한 것입니다.
 
-* policies: JSON document that outlines permissions for users or groups
-* 정책: 사용자 또는 그룹에 대한 권한을 설명하는 JSON 문서
+* __예약된 예약 인스턴스__
+    * 예약한 시간 내에 실행
+    * 일/주/월 단위가 필요한 경우
+    * 1~3년 이상 지속되는 약속
+        * Scheduled Reserved Instances 는 현재 사용되지 않지만 시험에 나올 수는 있음
 
-* Roles: for EC2 instances or AWS services
-* 역할: EC2 인스턴스 또는 AWS 서비스용
+* EC2 Savings Plans
+    * Get a discount based on long-term usage (up to 72% - same as RIs)
+    * Commit to a certain type of usage ($10/hour for 1 or 3 years)
+    * Usage beyond EC2 Savings Plans is billed at the On-Demand price
+    * Locked to a specific instance family & AWS region (e.g., M5 in us-east-1)
 
-* Security: MFA + Password Policy
-* 보안: MFA + 암호 정책
+    * Flexible across:
+        * Instance Size (e.g., m5.xlarge, m5.2xlarge)
+        * OS (e.g., Linux, Windows)
+        * Tenancy (Host, Dedicated, Default)
 
-* Access Keys: access AWS using the CLI or SDK
-* 액세스 키: CLI 또는 SDK를 사용하여 AWS에 액세스
+* EC2 절감 계획
+    * 장기 사용량 기준 할인(최대 72% - Reserved Instances 와 동일)
+    * 특정 유형의 사용(1년 또는 3년 동안 시간당 10달러)을 커밋합니다.
+    * EC2 절감 계획을 초과하는 사용량은 주문형 가격으로 청구됩니다.
+    * 특정 인스턴스 제품군 및 AWS 지역(예: us-east-1의 M5)에 고정됨
 
-* Audit: IAM Credential Reports & IAM Access Advisor
-* 감사: IAM 자격 증명 보고서 및 IAM 액세스 어드바이저
+    * 유연성:
+        * 인스턴스 크기(예: m5.xlarge, m5.2xlarge)
+        * OS(예: Linux, Windows)
+        * 테넌트(호스트, 전용, 기본)
+
+### 4.4 EC2 Spot Instances (중요!!)
+할인율이 가장 높은 옵션
+* Can get a __discount of up to 90%__ compared to On-demand
+* Instances that you can “lose” at any point of time if your max price is less than the current spot price
+* The __MOST cost-efficient__ instances in AWS
+
+* Useful for workloads that are resilient to failure
+    * Batch jobs
+    * Data analysis
+    * Image processing
+    * Any distributed workloads
+    * Workloads with a flexible start and end time
+
+* Not suitable for critical jobs or databases
+
+* On-demand 대비 최대 90% 할인 가능
+* 최대 가격이 현재 현물 가격보다 낮은 경우 언제든지 "손실"할 수 있는 인스턴스
+* AWS에서 __가장 비용 효율적인__ 인스턴스
+
+* __장애에 대한 복원력이 뛰어난 워크로드에 유용합니다.__
+    * 배치 작업
+    * 데이터 분석
+    * 이미지 처리
+    * 모든 __분산__ 워크로드
+    * 시작 시간과 종료 시간이 유연한 워크로드
+
+* __중요한 작업 또는 데이터베이스에 적합하지 않음__
+
+### 4.5 EC2 Dedicated Hosts (전용 호스트) (중요!!)
+* A physical server with EC2 instance capacity fully dedicated to your use
+* Allows you address __compliance requirements__ and __use your existing server bound software licenses__ (per-socket, per-core, pe—VM software licenses)
+* Purchasing Options:
+    * __On-demand__ – pay per second for active Dedicated Host
+    * __Reserved__ - 1 or 3 years (No Upfront, Partial Upfront, All Upfront)
+* The most expensive option
+
+* Useful for software that have complicated licensing model (BYOL – Bring Your Own License)
+* Or for companies that have strong regulatory or compliance needs
+
+* 사용자 전용 EC2 인스턴스 용량을 갖춘 물리적 서버
+* __컴플라이언스 요구사항__ 을 해결하고 __기존 서버 바인딩 소프트웨어 라이센스__(소켓 단위, 코어 단위, VM 소프트웨어 라이센스)를 사용할 수 있습니다.
+* 구매 옵션:
+    * __주문형__ – 활성 전용 호스트에 대한 초당 결제
+    * __예약__ - 1년 또는 3년(선불 불가, 부분선불, 모두선불)
+* 가장 비싼 옵션
+
+* 복잡한 라이센스 모델(BYOL – Bring Your Own License)을 사용하는 소프트웨어에 유용합니다.
+* 또는 강력한 규제 또는 규정 준수 요구 사항이 있는 기업의 경우
+
+### 4.6 EC2 Dedicated Instances (중요!!)
+Dedicated Hosts(전용 호스트) 의 약한 버전
+* Instances run on hardware that’s dedicated to you
+* May share hardware with other instances in same account
+* No control over instance placement (can move hardware after Stop / Start)
+
+* 사용자 전용 하드웨어에서 인스턴스 실행
+* 동일한 계정의 다른 인스턴스와 하드웨어를 공유할 수 있음
+* 인스턴스 배치를 제어할 수 없음 (Stop/Start 후 하드웨어 이동 가능)
+
+![Untitled](/assets/img/aws_saa_c02/221226_ec2_dedicated_hosts_vs_instances.JPG)
+
+* Dedicated Hosts
+    * 전용 물리적 서버 사용 (공통점)
+    * __호스트__ 당 청구
+    * 하드웨어의 근본에 접근 권한을 많이 제공
+        * 전용 호스트에서 사용 가능한 다양한 서버 결합 라이센스를 받을 수 있음
+            * 소켓, 코어, 호스트id 등의 접근 권한
+    * 관여도가 높기 때문에 서버 결합 라이센스가 있는 경우에 적합
+
+* Dedicated Instances
+    * 전용 물리적 서버 사용 (공통점)
+    * __인스턴스__ 당 청구
+    * 전용 인스턴스가 제공하는 딱 하나 : automatic instance placement (자동 인스턴스 배치)
+    * 높은 수준의 규제 준수가 필요해 하드웨어를 타인과 공유하지 않고자 할 때 적합
+
+### 4.7 EC2 Capacity Reservations (용량 예약) (중요!!)
+* Reserve __On-Demand__ instances capacity in a specific AZ for any duration
+* You always have access to EC2 capacity when you need it
+* No time commitment (create/cancel anytime), __no billing discounts__
+* Combine with Regional Reserved Instances and Savings Plans to benefit from billing discounts
+* You’re charged at On-Demand rate whether you run instances or not
+
+* Suitable for short-term, uninterrupted workloads that needs to be in a specific AZ
+
+* 특정 AZ에서 __On-Demand__ 인스턴스 용량을 임의의 기간 동안 예약합니다.
+* 필요할 때 언제든지 EC2 용량에 액세스할 수 있습니다.
+* 시간 약속 없음(언제든지 생성/취소), __청구 할인 없음__
+* 지역별 예약 인스턴스 및 절감 계획과 결합하여 청구 할인 혜택 활용
+* 인스턴스 실행 여부에 관계없이 주문형 요금이 부과됩니다.
+
+* 특정 AZ에 있어야 하는 단기 중단 없는 워크로드에 적합
+
+### 4.8 Which purchasing option is right for me
+* On demand: coming and staying in resort whenever we like, we pay the full price
+* Reserved: like planning ahead and if we plan to stay for a long time, we may get a good discount.
+* Savings Plans: pay a certain amount per hour for certain period and stay in any room type (e.g., King, Suite, Sea View, …)
+* Spot instances: the hotel allows people to bid for the empty rooms and the highest bidder keeps the  rooms. You can get kicked out at any time
+* Dedicated Hosts: We book an entire building of the resort
+* Capacity Reservations: you book a room for a period with full price even you don’t stay in it
+
+* 온 디맨드: 원할 때 언제든지 리조트에 와서 숙박, 전액을 지불
+* 예약: 미리 계획하고 오래 머물 계획이면 할인을 받을 수 있음
+* 저축 계획: 특정 기간 동안 시간당 일정 금액을 지불하고 모든 유형의 객실에 숙박(예: King, Suite, Sea View 등)
+* 스팟 인스턴스: 호텔은 사람들이 빈 방에 입찰할 수 있도록 허용하고 가장 높은 입찰자가 그 방을 유지, 언제든지 쫓겨날 수 있음
+* 전용 호스트: 리조트 건물 전체를 예약
+* 용량 예약: 숙박하지 않아도 전체 가격으로 일정 기간 동안 객실을 예약
 
 
 ### Reference

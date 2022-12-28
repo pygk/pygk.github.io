@@ -2,7 +2,7 @@
 layout: custom
 title: EC2 Basics
 date: 2022-12-22 16:08:00 +0900
-last_modified_at: 2022-12-26 23:24:00 +0900
+last_modified_at: 2022-12-28 05:03:00 +0900
 category: SAA-C02
 tags: ["AWS", "SAA-C02", "EC2"]
 published: False
@@ -73,7 +73,7 @@ published: False
 
 
 ## 2. EC2 Instance Types
-### 2.1 Overview
+### 2.1. Overview
 * m5.2xlarge
     * m: instance class 
     * 5: generation (AWS improves them over time)
@@ -84,7 +84,7 @@ published: False
     * 5: 세대(AWS는 시간이 지남에 따라 개선함)
     * 2xlarge: 인스턴스 클래스 내 크기
 
-### 2.2 EC2 Instance Types – General Purpose
+### 2.2. EC2 Instance Types – General Purpose
 * Great for compute-intensive tasks that require high performance processors:
     * Batch processing workloads
     * Media transcoding
@@ -101,7 +101,7 @@ published: False
     * 과학적 모델링 및 기계 학습
     * 전용 게임 서버
 
-### 2.3 EC2 Instance Types – Memory Optimized
+### 2.3. EC2 Instance Types – Memory Optimized
 * Fast performance for workloads that process large data sets in memory
 * Use cases: 
     * High performance, relational/non-relational databases
@@ -116,7 +116,7 @@ published: False
     * BI(비즈니스 인텔리전스)에 최적화된 인메모리 데이터베이스
     * 대용량 비정형 데이터를 실시간으로 처리하는 애플리케이션
 
-### 2.3 EC2 Instance Types – Memory Optimized
+### 2.3. EC2 Instance Types – Memory Optimized
 * Great for storage-intensive tasks that require high, sequential read and write access to large data sets on local storage
 * Use cases: 
     * High frequency online transaction processing (OLTP) systems
@@ -135,7 +135,7 @@ published: False
 
 
 ## 3. Security Groups
-### 3.1 Security Groups
+### 3.1. Security Groups
 * Security Groups are the fundamental of network security in AWS
 * They control how traffic is allowed into or out of our EC2 Instances.
 * Security groups only contain __allow__ rules
@@ -160,7 +160,7 @@ published: False
     * 인바운드 네트워크 제어(다른 인스턴스에서 인스턴스로)
     * 아웃바운드 네트워크 제어(인스턴스에서 다른 인스턴스로)
 
-### 3.2 Security Groups Diagram
+### 3.2. Security Groups Diagram
 ![Untitled](/assets/img/aws_saa_c02/221226_ec2_security_groups_diagram.JPG)
 * ec2 instance
 * inbound 규칙과 outbound 규칙이 있는 하나의 security group
@@ -169,7 +169,7 @@ published: False
     * 다른 ip는 방화벽이 차단하기 때문에 ec2 instance에 액세스 불가 (time out)
 * outbound 디폴트는 모든 트래픽 허용
 
-### 3.3 Security Groups Good to know (알아두면 좋은 정보)
+### 3.3. Security Groups Good to know (알아두면 좋은 정보)
 * Can be attached to multiple instances
 * Locked down to a region / VPC combination
 * Does live “outside” the EC2 – if traffic is blocked the EC2 instance won’t see it
@@ -188,7 +188,7 @@ published: False
 * 모든 인바운드 트래픽은 기본적으로 __차단__됩니다.
 * 모든 아웃바운드 트래픽은 기본적으로 __승인__됩니다.
 
-### 3.4 Referencing other Security Groups Diagram
+### 3.4. Referencing other Security Groups Diagram
 ![Untitled](/assets/img/aws_saa_c02/221226_ec2_security_groups_diagram_2.JPG)
 * 로드 밸런서 사용
 * 보안 그룹의 다른 보안 그룹을 참조하는 방법
@@ -197,7 +197,7 @@ published: False
 * 새로운 ec2 instance 를 생성했을 때, (올바른 보안 그룹에 연결되었기 때문에) __ip와 상관없이__ 다른 인스턴스를 통해 바로 통신 가능
 * security group 3 은 security group 1 의 인바운드 규칙으로 거부됨
 
-### 3.5 Classic Ports to know (중요!)
+### 3.5. Classic Ports to know (중요!)
 * 22 = SSH (Secure Shell) - log into a Linux instance
 * 21 = FTP (File Transfer Protocol) – upload files into a file share
 * 22 = SFTP (Secure File Transfer Protocol) – upload files using SSH
@@ -214,7 +214,7 @@ published: False
 
 
 ## 4. EC2 Instances
-### 4.1 EC2 Instances Purchasing Options (중요!!)
+### 4.1. EC2 Instances Purchasing Options (중요!!)
 사례에 따라 최대로 비용을 절감할 수 있고 특정 규칙을 준수할 수 있는 최적의 EC2 Instance 구매 옵션을 물어보는 문제
 
 * __On-Demand Instances__ – short workload, predictable pricing, pay by second
@@ -240,7 +240,7 @@ published: False
 * __전용 인스턴스__ – 다른 고객이 귀하의 하드웨어를 공유하지 않습니다.
 * __용량 예약__ – 모든 기간 동안 특정 AZ의 용량 예약
 
-### 4.2 EC2 On Demand (중요!!)
+### 4.2. EC2 On Demand (중요!!)
 * Pay for what you use:
     * Linux or Windows - billing per second, after the first minute
     * All other operating systems - billing per hour 
@@ -257,7 +257,7 @@ published: False
 
 * 애플리케이션이 어떻게 작동할지 예측할 수 없는 __단기적__ 이고 __중단 없는__ 워크로드에 권장됩니다.
 
-### 4.3 EC2 Reserved Instances (중요!!)
+### 4.3. EC2 Reserved Instances (중요!!)
 * Up to __72%__ discount compared to On-demand
 * You reserve a specific instance attributes __(Instance Type, Region, Tenancy, OS)__
 * __Reservation Period__ – __1 year__ (+discount) or __3 years__ (+++discount)
@@ -317,7 +317,7 @@ published: False
         * OS(예: Linux, Windows)
         * 테넌트(호스트, 전용, 기본)
 
-### 4.4 EC2 Spot Instances (중요!!)
+### 4.4. EC2 Spot Instances (중요!!)
 할인율이 가장 높은 옵션
 * Can get a __discount of up to 90%__ compared to On-demand
 * Instances that you can “lose” at any point of time if your max price is less than the current spot price
@@ -345,7 +345,7 @@ published: False
 
 * __중요한 작업 또는 데이터베이스에 적합하지 않음__
 
-### 4.5 EC2 Dedicated Hosts (전용 호스트) (중요!!)
+### 4.5. EC2 Dedicated Hosts (전용 호스트) (중요!!)
 * A physical server with EC2 instance capacity fully dedicated to your use
 * Allows you address __compliance requirements__ and __use your existing server bound software licenses__ (per-socket, per-core, pe—VM software licenses)
 * Purchasing Options:
@@ -366,7 +366,7 @@ published: False
 * 복잡한 라이센스 모델(BYOL – Bring Your Own License)을 사용하는 소프트웨어에 유용합니다.
 * 또는 강력한 규제 또는 규정 준수 요구 사항이 있는 기업의 경우
 
-### 4.6 EC2 Dedicated Instances (중요!!)
+### 4.6. EC2 Dedicated Instances (중요!!)
 Dedicated Hosts(전용 호스트) 의 약한 버전
 * Instances run on hardware that’s dedicated to you
 * May share hardware with other instances in same account
@@ -392,7 +392,7 @@ Dedicated Hosts(전용 호스트) 의 약한 버전
     * 전용 인스턴스가 제공하는 딱 하나 : automatic instance placement (자동 인스턴스 배치)
     * 높은 수준의 규제 준수가 필요해 하드웨어를 타인과 공유하지 않고자 할 때 적합
 
-### 4.7 EC2 Capacity Reservations (용량 예약) (중요!!)
+### 4.7. EC2 Capacity Reservations (용량 예약) (중요!!)
 * Reserve __On-Demand__ instances capacity in a specific AZ for any duration
 * You always have access to EC2 capacity when you need it
 * No time commitment (create/cancel anytime), __no billing discounts__
@@ -409,7 +409,7 @@ Dedicated Hosts(전용 호스트) 의 약한 버전
 
 * 특정 AZ에 있어야 하는 단기 중단 없는 워크로드에 적합
 
-### 4.8 Which purchasing option is right for me
+### 4.8. Which purchasing option is right for me
 * On demand: coming and staying in resort whenever we like, we pay the full price
 * Reserved: like planning ahead and if we plan to stay for a long time, we may get a good discount.
 * Savings Plans: pay a certain amount per hour for certain period and stay in any room type (e.g., King, Suite, Sea View, …)
@@ -424,6 +424,108 @@ Dedicated Hosts(전용 호스트) 의 약한 버전
 * 전용 호스트: 리조트 건물 전체를 예약
 * 용량 예약: 숙박하지 않아도 전체 가격으로 일정 기간 동안 객실을 예약
 
+
+## 5. Spot Instances
+### 5.1. EC2 Spot Instance Requests
+* Can get a discount of up to 90% compared to On-demand
+* Define max spot price and get the instance while current spot price < max 
+    * The hourly spot price varies based on offer and capacity
+    * If the current spot price > your max price you can choose to stop or terminate your instance with a 2 minutes grace period.
+* Other strategy: Spot Block
+    * “block” spot instance during a specified time frame (1 to 6 hours) without interruptions
+    * In rare situations, the instance may be reclaimed
+        * Spot Blocks are no longer available to new AWS customers since july 1st 2021 And won't be supported after December 31 2022
+* Used for batch jobs, data analysis, or workloads that are resilient to failures. 
+* Not great for critical jobs or databases
+
+* 주문형 대비 최대 90% 할인 가능
+* 최대 현물 가격을 정의하고 현재 현물 가격 < max
+    * 시간당 현물 가격은 오퍼 및 용량에 따라 달라집니다.
+    * 현재 현물 가격이 당신의 최대 가격보다 높은 경우 2분의 유예 기간을 두고 인스턴스를 중지하거나 종료하도록 선택할 수 있습니다.
+* 기타 전략: 스폿 블록
+    * 지정된 시간(1~6시간) 동안 중단 없이 스폿 인스턴스를 "차단"
+    * 드문 경우지만 인스턴스가 회수될 수 있습니다.
+        * 스팟 블록은 2021년 7월 1일 이후 신규 AWS 고객에게 더 이상 제공되지 않습니다. 2022년 12월 31일 이후에는 지원되지 않습니다.
+* 장애 발생 시 복원력이 뛰어난 배치 작업, 데이터 분석 또는 워크로드에 사용됩니다.
+* 중요한 작업 또는 데이터베이스에 적합하지 않음
+
+### 5.2. How to terminate Spot Instances? (매우 중요!!)
+* You can only cancel Spot Instance requests that are open, active, or disabled. 
+* Cancelling a Spot Request does not terminate instances
+* You must first cancel a Spot Request, and then terminate the associated Spot Instances
+* open, active, disabled 인 스폿 인스턴스 요청만 취소할 수 있습니다.
+* 스폿 요청을 취소해도 인스턴스가 종료되지 않습니다.
+* 먼저 스팟 요청을 취소한 다음 관련 스팟 인스턴스를 종료해야 합니다.
+
+![Untitled](/assets/img/aws_saa_c02/20221228_ec2_terminate_spot_instances.JPG)
+
+* 스팟 요청
+    * 지불 의사가 있는 인스턴스 최고 가격
+    * 원하는 인스턴스의 개수
+    * AMI 등 요구되는 사양
+    * 요청의 유효 기간 (무기한 가능)
+    * 요청의 유형
+
+* 요청 유형
+    * 스팟 인스턴스를 위한 일회성 요청
+        * 스팟 요청이 이행되는 즉시 인스턴스가 시작
+        * 스팟 요청은 사라짐 (스팟 요청이 사라져도 괜찮은 경우에 사용하는 유형)
+
+    * 사후 인스턴스를 위한 지속적인 요청
+        * 스팟 요청의 Valid from부터 Valid until까지의 유효 기간 동안 요청한 개수의 인스턴스들이 계속 유효
+        * 어떤 이유로 인스턴스가 중단되거나 스팟 가격 상승을 이유로 방해를 받은 경우에는 스팟 요청이 다시 전달되어 요청이 검증되고 나면 스팟 인스턴스가 재시작
+        * 스팟 인스턴스가 중단되어도 스팟 요청이 여전히 활성화되어 있기 때문에 스팟 요청이 자동적으로 인스턴스를 재시작해 줌
+
+* 스팟 요청이 취소되기 위해서는 open, active, disabled 상태여야 함 (failed, cancelled, closed 상태는 불가)
+* 스팟 요청을 취소하게 되면 기존에 실행했던 인스턴스는 종료 되지 않음
+    * 기존에 실행했던 인스턴스를 종료하는 것은 AWS의 책무가 아닌 사용자의 책무
+* 스팟 인스턴스를 영구히 종료하고 재실행되는 일이 없도록 하기 위해서는 먼저 스팟 요청부터 취소한 후 해당 요청과 연결된 스팟 인스턴스를 종료해야함
+    * 스팟 인스턴스를 먼저 종료하면 스팟 요청이 다시 작동하여 인스턴스를 다시 실행함
+
+* 올바른 순서
+    1. 스팟 요청을 취소 (AWS가 더 이상 새로운 인스턴스를 실행하지 않게끔 함)
+    2. 연결된 스팟 인스턴스를 종료
+
+
+### 5.3. Spot Fleets
+극강의 비용 절감을 위한 방법
+* Spot Fleets = set of Spot Instances + (optional) On-Demand Instances
+* The Spot Fleet will try to meet the target capacity with price constraints
+    * Define possible launch pools: instance type (m5.large), OS, Availability Zone
+    * Can have multiple launch pools, so that the fleet can choose
+    * Spot Fleet stops launching instances when reaching capacity or max cost
+* Strategies to allocate Spot Instances:  (중요!)
+    * __lowestPrice__: from the pool with the lowest price (cost optimization, short workload) (중요!)
+    * __diversified__: distributed across all pools (great for availability, long workloads)
+    * __capacityOptimized__: pool with the optimal capacity for the number of instances
+* _Spot Fleets allow us to automatically request Spot Instances with the lowest price_
+
+* Spot Fleet = 스폿 인스턴스 세트 + (선택 사항) 주문형 인스턴스
+* Spot Fleet은 가격 제약으로 목표 용량을 충족하려고 합니다.
+    * 가능한 launch pools 정의: 인스턴스 유형(m5.large), OS, 가용성 영역
+    * 여러 개의 launch pools 을 보유하여 fleet이 선택할 수 있음
+    * 용량 또는 최대 비용에 도달하면 Spot Fleet이 인스턴스 시작을 중지합니다.
+* Spot Instances 할당 전략:  (중요!)
+    * __최저가격__: 최저가격(비용 최적화, 짧은 워크로드)의 pool에서 제공 (중요!)
+    * __다양화__: 모든 pool에 분산됨(가용성 및 긴 워크로드에 적합)
+    * __용량최적화__: 인스턴스 수에 맞는 최적의 용량을 갖춘 pool
+* _스팟 플릿을 사용하면 최저 가격으로 스팟 인스턴스를 자동으로 요청할 수 있습니다_
+
+
+### Summary 
+* EC2 Instance: AMI (OS) + Instance Size (CPU + RAM) + Storage + security groups + EC2 User Data
+* Security Groups: Firewall attached to the EC2 instance
+* EC2 User Data: Script launched at the first start of an instance
+* SSH: start a terminal into our EC2 Instances (port 22)
+* EC2 Instance Role: link to IAM roles
+* Purchasing Options: On-Demand, Spot, Reserved (Standard + Convertible + Scheduled), Dedicated Host, Dedicated Instance
+
+* EC2 인스턴스: AMI(OS) + 인스턴스 크기(CPU + RAM) + 스토리지 + 보안 그룹 + EC2 사용자 데이터
+* 보안 그룹: EC2 인스턴스에 연결된 방화벽
+* EC2 사용자 데이터: 인스턴스의 첫 번째 시작 시 실행되는 스크립트
+* SSH: EC2 인스턴스에 터미널을 시작합니다(포트 22).
+* EC2 인스턴스 역할: IAM 역할 링크
+* 구매 옵션: 주문형, 스폿, 예약(표준 + 컨버터블 + 예약됨), 전용 호스트, 전용 인스턴스
 
 ### Reference
 Stephane Maarek,【글로벌 Best】 AWS Certified Solutions Architect Associate 시험합격!, Udemy

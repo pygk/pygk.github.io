@@ -40,12 +40,12 @@ published: False
 
 
 ## 2. IAM Policies
-### 2.1 IAM Policies inheritance (상속)
+### 2.1. IAM Policies inheritance (상속)
 * 그룹내의 사용자는 그룹의 정책을 상속 받음.
 
 
 ## 3. IAM MFA
-### 3.1 Password Policy
+### 3.1. Password Policy
 * Strong passwords = higher security for your account
 * 강력한 암호 = 계정에 대한 높은 보안성
 
@@ -78,7 +78,7 @@ published: False
     * Prevent password re-use
     * 암호 재사용 방지
 
-### 3.2 (중요!) Multi Factor Authentication - MFA
+### 3.2. (중요!) Multi Factor Authentication - MFA
 AWS에서 필수조항이고 사용하도록 강력 권고됨.
 MFA 디바이스를 사용하여 Root 계정을 보호. (Physical Device)
 
@@ -96,7 +96,7 @@ MFA 디바이스를 사용하여 Root 계정을 보호. (Physical Device)
 
 * Password + MFA (MFA 생성 토큰) => Successful login
 
-### 3.3 (중요!) MFA devices options in AWS
+### 3.3. (중요!) MFA devices options in AWS
 * Virtual MFA device: Support for multiple tokens on a single device.
     * Google Authenticator (phone only) - 한 번에 하나의 폰에서만 작동
     * Authy (multi-device) - 컴퓨터와 폰에서 함께 사용 가능
@@ -112,7 +112,7 @@ MFA 디바이스를 사용하여 Root 계정을 보호. (Physical Device)
 
 
 ## 4. IAM Access key
-### 4.1 Access AWS
+### 4.1. Access AWS
 * To access AWS, you have three options:
 * AWS에 액세스하려면 다음 세 가지 옵션을 사용할 수 있습니다:
     * __AWS Management Console__ (protected by password + MFA)
@@ -130,7 +130,7 @@ MFA 디바이스를 사용하여 Root 계정을 보호. (Physical Device)
 * Access Key ID ~= username
 * Secret Access Key ~= password
 
-### 4.2 AWS CLI
+### 4.2. AWS CLI
 * A tool that enables you to interact with AWS services using commands in your command-line shell
 * command-line shell의 명령을 사용하여 AWS 서비스와 상호 작용할 수 있는 도구
 
@@ -145,7 +145,7 @@ MFA 디바이스를 사용하여 Root 계정을 보호. (Physical Device)
 * Alternative to using AWS Management Console
 * AWS Management Console을 사용하는 방법
 
-### 4.3 AWS SDK
+### 4.3. AWS SDK
 * AWS Software Development Kit (AWS SDK)
 * AWS 소프트웨어 개발 키트(AWS SDK)
 

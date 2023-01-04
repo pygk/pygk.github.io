@@ -4,7 +4,7 @@ title: jekyll 블로그 카테고리 페이지 만들기
 date: 2022-12-21 15:26:00 +0900
 last_modified_at: 2022-12-21 15:26:00 +0900
 category: jekyll
-tags: ["minimal mistakes"]
+tags: ["jekyll", "minimal mistakes"]
 published: True
 
 ---
